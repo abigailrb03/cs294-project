@@ -6,8 +6,8 @@ songs_df = pd.read_csv('./songs.csv')
 songs_df.rename(columns={songs_df.columns[0]: "time", songs_df.columns[1]: "email", songs_df.columns[2]: "song_link"}, inplace=True)
 songs_df["song_id"] = songs_df["song_link"].str.extract(r"\/track\/(.+)\?")
 
-client_id = "311605c82eae45beb870b893ac8231ee"
-client_secret = "a3724ac6ff4e49da83b734f3765d1f20"
+client_id = ""
+client_secret = ""
 
 auth_url = "https://accounts.spotify.com/api/token"
 data = {
