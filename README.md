@@ -1,9 +1,5 @@
 # We have Spotify at home
 
-A new full stack web application project for CS 61A and DATA C88C designed by
-Abigail Brooks-Ramirez (@abigailrb03) and Rebecca Dang (@phrdang), advised by
-Profs. Lisa Yan and Michael Ball at UC Berkeley through CS 294-189 Teaching at Scale.
-
 ## Background
 
 In this project, you will create a full-stack web application to create a feature similar to Spotify's *Daylist* feature. A "tech stack" is the set of technologies you use in order to complete a projects, such as programming languages and libraries. Full stack projects use technologies for all different kinds of applications, hence the name "full stack".
@@ -28,11 +24,9 @@ Inside `__init__.py`, you’ll see code that connects different parts of the web
 1. Setup a virtual environment: `python3 -m venv .venv`
 2. Activate the virtual environment: `. .venv/bin/activate`
 3. Install dependencies: `pip install -r requirements.txt`
-4. Create the `song_metadata.csv` file by following the instructions in `project/spotify_webscrape/README.md`.
-5. Initialize the database:
+4. Initialize the database:
 ```sh
-cd project/flask_app
-mkdir instance
+cd project/flask_app_starter
 flask --app __init__.py init-db
 ```
 
@@ -41,18 +35,16 @@ flask --app __init__.py init-db
 1. Setup a virtual environment: `py -3 -m venv .venv`
 2. Activate the virtual environment: `.venv\Scripts\activate`
 3. Install dependencies: `pip install -r requirements.txt`
-4. Create the `song_metadata.csv` file by following the instructions in `project/spotify_webscrape/README.md`.
-5. Initialize the database:
+4. Initialize the database:
 ```
-cd project\flask_app
-mkdir instance
+cd project\flask_app_starter
 flask --app __init__.py init-db
 ```
 
 ## Running the web app locally
 
 ```sh
-cd project/flask_app
+cd project/flask_app_starter
 flask --app __init__.py --debug run
 ```
 
@@ -65,10 +57,4 @@ Unit tests are located in the `project/tests` directory and are run using [pytes
 ```sh
 cd project
 pytest
-
-# Verbose test output
-pytest -v
-
-# Display setup steps, e.g. setup and teardown of pytest fixtures
-pytest --setup-show
 ```
