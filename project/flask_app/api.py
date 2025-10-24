@@ -18,8 +18,7 @@ def track_image():
         }), HTTPStatus.BAD_REQUEST
 
     database = db.get_db()
-    # TODO: an opportunity to talk about sql injection?
-    image_url = database.execute(
+    row = database.execute(
         """
         SELECT album_image_url
         FROM songs
@@ -28,7 +27,7 @@ def track_image():
         (artist_name, song_title)
     ).fetchone()
 
-    if image_url is None:
+    if row is None:
         return jsonify({
             "status": "error",
             "message": f"Track image for artist {artist_name} and song title {song_title} not found",
@@ -37,5 +36,5 @@ def track_image():
     return jsonify({
         "artist": artist_name,
         "title": song_title,
-        "image_url": image_url["album_image_url"],
+        "image_url": row["album_image_url"],
     }), HTTPStatus.OK
