@@ -1,26 +1,33 @@
-from flask import Flask, render_template
-from . import db
+from flask import Flask
+import os
+
+from . import db, main, api
 
 def create_app(test_config=None):
     """Create and configure an instance of the Flask application."""
     app = Flask(__name__, instance_relative_config=True)
-    db.init_app(app)
+    app.config.from_mapping(
+        SECRET_KEY='dev',
+        DATABASE="instance/songs.db",
+    )
 
-    app.config["DATABASE"] = "instance/songs.db"
+    # Apply test config if provided (this will overwrite defaults like DATABASE)
+    if test_config is not None:
+        app.config.update(test_config)
+
+    # ensure the instance folder exists
+    try:
+        os.makedirs(app.instance_path)
+    except OSError:
+        pass
+
+    db.init_app(app)
 
     with app.app_context():
         db.init_db()
 
-    @app.route("/")
-    def run():
-        return render_template('app.html', person="CS88C student")
-
-    @app.route("/songs")
-    def show_songs():
-        database = db.get_db()
-        songs = database.execute(
-            "SELECT track_name, artist_name, album_image_url FROM songs"
-        ).fetchall()
-        return render_template("songs.html", songs=songs)
+    # Register Blueprints
+    app.register_blueprint(main.bp)
+    app.register_blueprint(api.bp)
 
     return app
