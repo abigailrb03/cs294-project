@@ -12,7 +12,7 @@ We'll introduce a lot of new vocabulary throughout this project, including "fron
 
 For this project we will ask you to utilize knowledge you've acquired through different parts of this course. Our song database is a *SQL Table* and the code we use to construct the database is in `db.py`. For now, don't worry about this code. Instead, read through `schema.sql` to familiarize yourself with the structure of the SQL table we'll be using.
 
-The code that sets up our website lives in `__init__.py`. Just like how a class in Python needs to be initialized before you can use it, our web app also needs to be initialized before it can run.  
+The code that sets up our website lives in `__init__.py`. Just like how a class in Python needs to be initialized before you can use it, our web app also needs to be initialized before it can run.
 
 Inside `__init__.py`, you’ll see code that connects different parts of the website to specific URLs—these are called *endpoints*. Each endpoint tells the app what to do when someone visits a certain web address (for example, `/home` or `/login`). Our song can be found in the `\songs` endpoint.
 
@@ -56,4 +56,19 @@ cd project/flask_app
 flask --app __init__.py --debug run
 ```
 
-Then go to [http://127.0.0.1:5000/songs](http://127.0.0.1:5000/songs) to view the songs in the front end!
+Then go to [http://127.0.0.1:5000](http://127.0.0.1:5000) to view the web app!
+
+## Running unit tests
+
+Unit tests are located in the `project/tests` directory and are run using [pytest](https://docs.pytest.org/en/stable/).
+
+```sh
+cd project
+pytest
+
+# Verbose test output
+pytest -v
+
+# Display setup steps, e.g. setup and teardown of pytest fixtures
+pytest --setup-show
+```
