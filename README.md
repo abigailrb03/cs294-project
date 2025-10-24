@@ -2,7 +2,7 @@
 
 ## Background
 
-In this project, you will create a full-stack web application to create a feature similar to Spotify's *Daylist* feature. A "tech stack" is the set of technologies you use in order to complete a projects, such as programming languages and libraries. Full stack projects use technologies for all different kinds of applications, hence the name "full stack".
+In this project, you will create a full-stack web application to create a feature similar to Spotify's *Daylist* feature, a daily customized music playlist. A "tech stack" is the set of technologies you use in order to complete a projects, such as programming languages and libraries. Full stack projects use technologies for all different kinds of applications, hence the name "full stack".
 
 We'll introduce a lot of new vocabulary throughout this project, including the term *frontend* which refers to the side of the website the user sees. Our frontend is in the `project/flask_app_starter/templates` directory and is written in HTML (Hypertext Markup Language) and CSS (Cascading Style Sheets). HTML creates the layout of the webpage and CSS styles the page by customizing things such as font, colors, and font size. Everything that the user *can't* see is considered *backend*; things like OOP class designs, databases, and data manipulation are things that the user doesn't see when they visit a webpage. The backend of this project is written in Python using the [Flask](https://flask.palletsprojects.com/en/stable/) framework and is available in `project/flask_app_starter`.
 
