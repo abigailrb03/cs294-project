@@ -1,6 +1,5 @@
 import sqlite3
-from flask import current_app
-from flask import g
+from flask import current_app, g
 import click
 import csv
 import os
