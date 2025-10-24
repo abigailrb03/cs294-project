@@ -1,61 +1,33 @@
-from flask import Flask, render_template, jsonify, request
-from . import db
-from http import HTTPStatus
+from flask import Flask
+import os
+
+from . import db, main, api
 
 def create_app(test_config=None):
     """Create and configure an instance of the Flask application."""
     app = Flask(__name__, instance_relative_config=True)
-    db.init_app(app)
+    app.config.from_mapping(
+        SECRET_KEY='dev',
+        DATABASE="instance/songs.db",
+    )
 
-    app.config["DATABASE"] = "instance/songs.db"
+    # Apply test config if provided (this will overwrite defaults like DATABASE)
+    if test_config is not None:
+        app.config.update(test_config)
+
+    # ensure the instance folder exists
+    try:
+        os.makedirs(app.instance_path)
+    except OSError:
+        pass
+
+    db.init_app(app)
 
     with app.app_context():
         db.init_db()
 
-    @app.route("/")
-    def run():
-        return render_template('app.html', person="CS88C student")
-
-    @app.route("/songs")
-    def show_songs():
-        database = db.get_db()
-        songs = database.execute(
-            "SELECT track_name, artist_name, album_image_url FROM songs"
-        ).fetchall()
-        return render_template("songs.html", songs=songs)
-
-    @app.route("/api/track-image", methods=['GET'])
-    def track_image():
-        artist_name = request.args.get("artist", default=None)
-        song_title = request.args.get("title", default=None)
-
-        if artist_name is None or song_title is None:
-            return jsonify({
-                "status": "error",
-                "message": "Artist name and/or song title not provided as query arguments, both are required",
-            }), HTTPStatus.BAD_REQUEST
-
-        database = db.get_db()
-        # TODO: an opportunity to talk about sql injection?
-        image_url = database.execute(
-            """
-            SELECT album_image_url
-            FROM songs
-            WHERE artist_name = ? AND track_name = ?
-            """,
-            (artist_name, song_title)
-        ).fetchone()
-
-        if image_url is None:
-            return jsonify({
-                "status": "error",
-                "message": f"Track image for artist {artist_name} and song title {song_title} not found",
-            }), HTTPStatus.NOT_FOUND
-
-        return jsonify({
-            "artist": artist_name,
-            "title": song_title,
-            "image_url": image_url["album_image_url"],
-        }), HTTPStatus.OK
+    # Register Blueprints
+    app.register_blueprint(main.bp)
+    app.register_blueprint(api.bp)
 
     return app
