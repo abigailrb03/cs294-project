@@ -1,0 +1,30 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Songs</title>
+    <style>
+      body { font-family: sans-serif; }
+      .song {
+        margin: 10px 0;
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+      }
+      img {
+        height: 80px;
+        border-radius: 5px;
+        vertical-align: middle;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Song List</h1>
+    {% for song in songs %}
+      <div class="song">
+        <img src="{{ song['album_image_url'] }}" alt="{{ song['track_name'] }}">
+        <strong>{{ song['track_name'] }}</strong> — {{ song['artist_name'] }}
+      </div>
+    {% else %}
+      <p>No songs found.</p>
+    {% endfor %}
+  </body>
+</html>

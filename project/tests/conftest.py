@@ -1,6 +1,8 @@
 import pytest
 import sqlite3
 
+# TODO need to figure out starter code compilation so that it imports flask_app_starter
+# or so that students' apps also are called flask_app
 from flask_app import create_app
 
 @pytest.fixture()
