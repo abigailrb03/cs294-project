@@ -6,7 +6,8 @@ FILES_TO_ARCHIVE := \
     README.md \
     project/flask_app_starter/ \
     project/tests/ \
-	requirements.txt
+	requirements.txt \
+	home.png
 
 EXCLUDE_PATTERNS := \
     *__pycache__/* \
