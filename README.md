@@ -1,4 +1,10 @@
-## We have Spotify at home
+# We have Spotify at home
+
+A new full stack web application project for CS 61A and DATA C88C designed by
+Abigail Brooks-Ramirez (@abigailrb03) and Rebecca Dang (@phrdang), advised by
+Profs. Lisa Yan and Michael Ball at UC Berkeley through CS 294-189 Teaching at Scale.
+
+## Background
 
 In this project, you will create a full-stack web application to create a feature similar to Spotify's *Daylist* feature. A "tech stack" is the set of technologies you use in order to complete a projects, such as programming languages and libraries. Full stack projects use technologies for all different kinds of applications, hence the name "full stack".
 
@@ -10,13 +16,44 @@ The code that sets up our website lives in `__init__.py`. Just like how a class 
 
 Inside `__init__.py`, you’ll see code that connects different parts of the website to specific URLs—these are called *endpoints*. Each endpoint tells the app what to do when someone visits a certain web address (for example, `/home` or `/login`). Our song can be found in the `\songs` endpoint.
 
+## Requirements
 
-## Important Commands
-- run `flask --app __init__.py run` to run
+- Python 3.9+
+- [Flask](https://flask.palletsprojects.com/en/stable/)
 
-- you might need to initalize the db with `flask --app __init__.py init-db`
+## Installation
 
-- create a folder `instances` within `flask_app` to store all db instances
+### MacOS
 
-- go to http://127.0.0.1:5000/songs to view the songs in the front end
+1. Setup a virtual environment: `python3 -m venv .venv`
+2. Activate the virtual environment: `. .venv/bin/activate`
+3. Install dependencies: `pip install -r requirements.txt`
+4. Create the `song_metadata.csv` file by following the instructions in `project/spotify_webscrape/README.md`.
+5. Initialize the database:
+```sh
+cd project/flask_app
+mkdir instance
+flask --app __init__.py init-db
+```
 
+### Windows
+
+1. Setup a virtual environment: `py -3 -m venv .venv`
+2. Activate the virtual environment: `.venv\Scripts\activate`
+3. Install dependencies: `pip install -r requirements.txt`
+4. Create the `song_metadata.csv` file by following the instructions in `project/spotify_webscrape/README.md`.
+5. Initialize the database:
+```
+cd project\flask_app
+mkdir instance
+flask --app __init__.py init-db
+```
+
+## Running the web app locally
+
+```sh
+cd project/flask_app
+flask --app __init__.py --debug run
+```
+
+Then go to [http://127.0.0.1:5000/songs](http://127.0.0.1:5000/songs) to view the songs in the front end!
