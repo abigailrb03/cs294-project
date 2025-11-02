@@ -18,33 +18,35 @@ The code that sets up our website lives in `project/flask_app_starter/__init__.p
 
 Follow the instructions below to setup your development environment locally.
 
-### MacOS
+1. Install [uv](https://docs.astral.sh/uv/getting-started/installation/), a cross-platform command line interface (CLI) to manage Python projects, versions, and dependencies. You can install `uv` however you wish but we recommend using the standalone installer by running one of these commands depending on your operating system:
+    - MacOS or Unix:
 
-1. Setup a virtual environment: `python3 -m venv .venv`
-2. Activate the virtual environment: `. .venv/bin/activate`
-3. Install dependencies: `pip install -r requirements.txt`
-4. Initialize the database:
+    ```sh
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+    ```
+
+    - Windows (run this in PowerShell):
+
+    ```ps
+    powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+    ```
+
+2. Setup your [virtual environment](https://docs.python.org/3/library/venv.html) and initialize your app's database:
+
 ```sh
-cd project/flask_app_starter
-flask --app __init__.py init-db
+uv run flask --app daylist init-db
 ```
 
-### Windows
-
-1. Setup a virtual environment: `py -3 -m venv .venv`
-2. Activate the virtual environment: `.venv\Scripts\activate`
-3. Install dependencies: `pip install -r requirements.txt`
-4. Initialize the database:
-```
-cd project\flask_app_starter
-flask --app __init__.py init-db
-```
+> Note: The `uv` tool will automatically ensure that you have the correct dependencies installed
+> and you are running the given command in a virtual environment when you prefix
+> commands with `uv run <command>`. You can also manually ensure your environment is setup
+> by running `uv sync` but this should happen automatically the first time you run the command
+> in step 2.
 
 ### Running the web app locally
 
 ```sh
-cd project/flask_app_starter
-flask --app __init__.py --debug run
+uv run flask --app daylist --debug run
 ```
 
 Then go to [http://127.0.0.1:5000](http://127.0.0.1:5000) to view the web app!
@@ -52,7 +54,7 @@ You should see something like this if everything works properly:
 
 ![Simple web app that says "Hello CS88C student! Go to the Songs Page!"](home.png)
 
-You can keep this local web server running as you work on the project. Whenever you want to quit the server, press `Ctrl + C`.
+You can keep this local web server running as you work on the project. Whenever you want to quit the server, press `Ctrl + C` in your terminal.
 
 > Note: It is important to pass the `--debug` command line flag so that any changes you make to the code will appear automatically as the app runs. If you do not include that flag, if you make a change in your code it will not be reflected until you quit the app and restart it.
 

@@ -43,7 +43,7 @@ def init_db():
 
 def load_songs_to_db():
     db = get_db()
-    data_path = os.path.join(os.path.dirname(__file__), "data", "songs_metadata.csv")
+    data_path = os.path.join(os.path.dirname(__file__), "data", "song_metadata.csv")
     with open(data_path, encoding='utf-8') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
