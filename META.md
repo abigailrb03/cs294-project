@@ -8,11 +8,6 @@ A new full stack web application project for CS 61A and DATA C88C designed by
 Abigail Brooks-Ramirez (@abigailrb03) and Rebecca Dang (@phrdang), advised by
 Profs. Lisa Yan and Michael Ball at UC Berkeley through CS 294-189 Teaching at Scale.
 
-## Requirements
-
-- Python 3.9+
-- [Flask](https://flask.palletsprojects.com/en/stable/)
-
 ## Installation
 
 ### MacOS

@@ -18,6 +18,13 @@ The code that sets up our website lives in `project/flask_app_starter/__init__.p
 
 Follow the instructions below to setup your development environment locally.
 
+1. Install uv
+2. Create the virtual environment and install the version of Python in `.python-version` through `uv`: `uv venv --managed-python`
+3. Verify your Python installation: `uv run python --version` should print the version in `.python-version`.
+4.
+
+Activate the virtual environment using the command printed in the output of step 2. (otherwise prefix with `uv run`)
+
 ### MacOS
 
 1. Setup a virtual environment: `python3 -m venv .venv`
@@ -178,7 +185,7 @@ row = database.execute(query, (artist_name, song_title)).fetchone()
 To test your implementation, run the following command from the `project` directory:
 
 ```sh
-pytest tests/test_api.py
+uv run pytest tests/test_api.py
 ```
 
 ## Running unit tests
@@ -189,8 +196,8 @@ Unit tests are located in the `project/tests` directory and are run using [pytes
 cd project
 
 # Run all unit tests
-pytest
+uv run pytest
 
 # Run tests in a specific file
-pytest path/to/file.py
+uv run pytest path/to/file.py
 ```

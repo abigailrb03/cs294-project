@@ -1,7 +1,7 @@
 from http import HTTPStatus
 
 def test_track_image_request(client):
-    response = client.get(f"/api/track-image", query_string={"artist": "Taylor Swift", "title": "Elizabeth Taylor"})
+    response = client.get("/api/track-image", query_string={"artist": "Taylor Swift", "title": "Elizabeth Taylor"})
     assert response.status_code == HTTPStatus.OK
     assert response.json["artist"] == "Taylor Swift"
     assert response.json["title"] == "Elizabeth Taylor"

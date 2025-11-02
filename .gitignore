@@ -1,9 +1,22 @@
+# Virtual environment
 .venv/
-venv/
+
 .DS_Store
+
+# Flask app database
 instance/
+
+# Caches
 __pycache__/
 *.pyc
+
 .pytest_cache/
+
+.ruff_cache
+
+# Prevent secrets (e.g. API keys) from being exposed
 .env
+
+# Compiled student starter code
 spotify-starter.zip
+# TODO: ignore flask_app_starter or equivalent

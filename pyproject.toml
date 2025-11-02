@@ -1,0 +1,14 @@
+[project]
+name = "cs294-project"
+version = "0.1.0"
+requires-python = ">=3.11.14"
+dependencies = [
+    "flask>=3.1.2",
+]
+
+[dependency-groups]
+dev = [
+    "pre-commit>=4.3.0",
+    "pytest>=8.4.2",
+    "ruff>=0.14.3",
+]
