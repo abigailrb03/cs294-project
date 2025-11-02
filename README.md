@@ -32,6 +32,12 @@ Profs. Lisa Yan and Michael Ball at UC Berkeley through CS 294-189 Teaching at S
 
     - Windows: Follow [these instructions](https://stackoverflow.com/questions/10265742/how-to-install-make-and-gcc-on-a-mac)
 
+3. Install [pre-commit](https://pre-commit.com/) git hook scripts:
+
+```sh
+uv run pre-commit install
+```
+
 ## Managing dependencies
 
 `uv` manages all Python versions, dependencies, and virtual environments depending on which directory you are in.
