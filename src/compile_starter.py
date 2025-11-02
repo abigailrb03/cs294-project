@@ -26,7 +26,6 @@ def strip_solutions_line_by_line(input_file_path, output_file_path):
 
     output_lines = []
     in_solution_block = False
-    current_prompt = None
 
     try:
         with open(input_file_path, 'r', encoding='utf-8') as infile:
