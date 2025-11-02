@@ -50,6 +50,9 @@ Verify that:
 > by running `uv sync` but this should happen automatically the first time you run the command
 > in step 2.
 
+> Note: You may see directories called `__pycache__` as you run Python commands.
+> You can ignore these directories and you should NOT modify them.
+
 ### Running the web app locally
 
 ```sh
