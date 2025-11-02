@@ -1,11 +1,10 @@
 import pandas as pd
-import re
 import requests
 from dotenv import dotenv_values
 
 env_vars = dotenv_values(".env")
 
-songs_df = pd.read_csv('./songs.csv')
+songs_df = pd.read_csv('./song_survey_responses.csv')
 songs_df.rename(columns={songs_df.columns[0]: "time", songs_df.columns[1]: "email", songs_df.columns[2]: "song_link"}, inplace=True)
 songs_df["song_id"] = songs_df["song_link"].str.extract(r"\/track\/(.+)\?")
 
