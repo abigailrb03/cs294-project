@@ -32,6 +32,19 @@ Profs. Lisa Yan and Michael Ball at UC Berkeley through CS 294-189 Teaching at S
 
     - Windows: Follow [these instructions](https://stackoverflow.com/questions/10265742/how-to-install-make-and-gcc-on-a-mac)
 
+## Managing dependencies
+
+`uv` manages all Python versions, dependencies, and virtual environments depending on which directory you are in.
+There are 3 virtual environments since each involves separate dependencies:
+
+1. Root directory
+2. `src/project/`
+3. `src/spotify-data/`
+
+Prefixing commands with `uv run` will ensure that you are using the correct virtual environment.
+
+In order to add or remove dependencies to a virtual environment, use [uv add](https://docs.astral.sh/uv/reference/cli/#uv-add) or [uv remove](https://docs.astral.sh/uv/reference/cli/#uv-remove) in the corresponding directory.
+
 ## Make targets
 
 See the `Makefile` for the `make` targets that allow you to perform various actions:
