@@ -1,4 +1,4 @@
-# Meta
+# cs294-project
 
 This is documentation for instructors and course staff.
 
@@ -8,68 +8,43 @@ A new full stack web application project for CS 61A and DATA C88C designed by
 Abigail Brooks-Ramirez (@abigailrb03) and Rebecca Dang (@phrdang), advised by
 Profs. Lisa Yan and Michael Ball at UC Berkeley through CS 294-189 Teaching at Scale.
 
-## Requirements
-
-- Python 3.9+
-- [Flask](https://flask.palletsprojects.com/en/stable/)
-
 ## Installation
 
-### MacOS
+1. Install [uv](https://docs.astral.sh/uv/getting-started/installation/), a cross-platform command line interface (CLI) to manage Python projects, versions, and dependencies. You can install `uv` however you wish but we recommend using the standalone installer by running one of these commands depending on your operating system:
+    - MacOS or Unix:
 
-1. Setup a virtual environment: `python3 -m venv .venv`
-2. Activate the virtual environment: `. .venv/bin/activate`
-3. Install dependencies: `pip install -r requirements.txt`
-4. Create the `song_metadata.csv` file by following the instructions in `project/spotify_webscrape/README.md`.
-5. Initialize the database:
-```sh
-cd project/flask_app
-flask --app __init__.py init-db
-```
+    ```sh
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+    ```
 
-### Windows
+    - Windows (run this in PowerShell):
 
-1. Setup a virtual environment: `py -3 -m venv .venv`
-2. Activate the virtual environment: `.venv\Scripts\activate`
-3. Install dependencies: `pip install -r requirements.txt`
-4. Create the `song_metadata.csv` file by following the instructions in `project/spotify_webscrape/README.md`.
-5. Initialize the database:
-```
-cd project\flask_app
-flask --app __init__.py init-db
-```
+    ```ps
+    powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+    ```
 
-## Running the web app locally
+2. Install `make`:
+    - MacOS (included in Xcode, which you might already have installed):
 
-```sh
-cd project/flask_app
-flask --app __init__.py --debug run
-```
+    ```sh
+    xcode-select --install
+    ```
 
-Then go to [http://127.0.0.1:5000](http://127.0.0.1:5000) to view the web app!
+    - Windows: Follow [these instructions](https://stackoverflow.com/questions/10265742/how-to-install-make-and-gcc-on-a-mac)
 
-## Running unit tests
+## Make targets
 
-See [README.md's "Running unit tests" section](README.md#running-unit-tests)
-
-## Compiling starter code for students
+See the `Makefile` for the `make` targets that allow you to perform various actions:
 
 ```sh
-# Make sure you are in the `project` directory
-cd project
+# Create starter code and .zip for students in .build/ directory
+make build
 
-# Copy the solution code into a starter code directory
-cp -R flask_app/ flask_app_starter/
-
-# Compile solution files to starter files, for example:
-python3 compile_starter.py flask_app/api.py flask_app_starter/api.py
-
-# Make sure you are in the root directory of the repo
-cd ..
-
-# Create the starter .zip file
-make archive
-
-# Remove the zip file and start from scratch if you want
+# Remove the .build/ directory
 make clean
+
+# Linting and formatting
+make lint       # view lint errors
+make lint-fix   # fix lint errors
+make format     # format code
 ```
