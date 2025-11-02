@@ -51,13 +51,15 @@ def load_songs_to_db():
         reader = csv.DictReader(csvfile)
         for row in reader:
             db.execute(
-                "INSERT INTO songs (song_link, song_id, track_name, artist_name, album_image_url) VALUES (?, ?, ?, ?, ?)",
+                "INSERT INTO songs (song_link, song_id, track_name, artist_name, album_name, album_image_url, duration) VALUES (?, ?, ?, ?, ?, ?, ?)",
                 (
                     row["song_link"],
                     row["song_id"],
                     row["track_name"],
                     row["artist_name"],
+                    row["album_name"],
                     row["album_image_url"],
+                    row["duration"],
                 ),
             )
     db.commit()
