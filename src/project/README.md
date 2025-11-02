@@ -37,6 +37,13 @@ Follow the instructions below to setup your development environment locally.
 uv run flask --app daylist init-db
 ```
 
+Verify that:
+
+- You have a new directory called `.venv` (this is your virtual environment)
+- You have a new directory called `instance` (this contains your database)
+
+**You can ignore the contents of these directories and you should NOT modify them.**
+
 > Note: The `uv` tool will automatically ensure that you have the correct dependencies installed
 > and you are running the given command in a virtual environment when you prefix
 > commands with `uv run <command>`. You can also manually ensure your environment is setup
@@ -186,7 +193,7 @@ uv run pytest tests/test_api.py
 ## Running unit tests
 
 Unit tests are located in the `tests` directory and are run using [pytest](https://docs.pytest.org/en/stable/)
-from the root directory.
+from the root directory. Running tests may create a directory `.pytest_cache` which can be ignored (do NOT modify it).
 
 ```sh
 # Run all unit tests
