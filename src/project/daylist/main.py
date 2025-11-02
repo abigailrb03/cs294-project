@@ -2,11 +2,13 @@ from flask import Blueprint, render_template
 from . import db
 
 # Create the main Blueprint
-bp = Blueprint('main', __name__)
+bp = Blueprint("main", __name__)
+
 
 @bp.route("/")
 def run():
-    return render_template('app.html', person="CS88C student")
+    return render_template("app.html", person="CS88C student")
+
 
 @bp.route("/songs")
 def show_songs():

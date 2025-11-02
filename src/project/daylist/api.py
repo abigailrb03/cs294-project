@@ -4,9 +4,10 @@ from http import HTTPStatus
 from . import db
 
 # Create the api Blueprint
-bp = Blueprint('api', __name__)
+bp = Blueprint("api", __name__)
 
-@bp.route("/api/track-image", methods=['GET'])
+
+@bp.route("/api/track-image", methods=["GET"])
 def track_image():
     """
     Endpoint: GET /api/track-image
@@ -35,12 +36,14 @@ def track_image():
 
     # BEGIN SOLUTION PROMPT="if _______:"
     if artist_name is None or song_title is None:
-    # END SOLUTION
+        # END SOLUTION
         # BEGIN SOLUTION PROMPT="return jsonify({'YOUR ANSWER HERE': 'AS A DICTIONARY'})"
-        return jsonify({
-            "status": "error",
-            "message": "Artist name and/or song title not provided as query arguments, both are required",
-        }), HTTPStatus.BAD_REQUEST
+        return jsonify(
+            {
+                "status": "error",
+                "message": "Artist name and/or song title not provided as query arguments, both are required",
+            }
+        ), HTTPStatus.BAD_REQUEST
         # END SOLUTION
 
     database = db.get_db()
@@ -55,18 +58,22 @@ def track_image():
 
     # BEGIN SOLUTION PROMPT="if _______:"
     if row is None:
-    # END SOLUTION
+        # END SOLUTION
         # BEGIN SOLUTION PROMPT="return jsonify({'YOUR ANSWER HERE': 'AS A DICTIONARY'})"
-        return jsonify({
-            "status": "error",
-            "message": f"Track image for artist {artist_name} and song title {song_title} not found",
-        }), HTTPStatus.NOT_FOUND
+        return jsonify(
+            {
+                "status": "error",
+                "message": f"Track image for artist {artist_name} and song title {song_title} not found",
+            }
+        ), HTTPStatus.NOT_FOUND
         # END SOLUTION
 
     # BEGIN SOLUTION PROMPT="return jsonify({'YOUR ANSWER HERE': 'AS A DICTIONARY'})"
-    return jsonify({
-        "artist": artist_name,
-        "title": song_title,
-        "image_url": row["album_image_url"],
-    }), HTTPStatus.OK
+    return jsonify(
+        {
+            "artist": artist_name,
+            "title": song_title,
+            "image_url": row["album_image_url"],
+        }
+    ), HTTPStatus.OK
     # END SOLUTION

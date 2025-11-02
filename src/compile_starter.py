@@ -14,6 +14,7 @@ python3 compile_starter.py flask_app/api.py flask_app_starter/api.py
 import argparse
 import re
 
+
 def strip_solutions_line_by_line(input_file_path, output_file_path):
     """
     Reads a .py file line by line. When a '# BEGIN SOLUTION' marker is found,
@@ -28,11 +29,10 @@ def strip_solutions_line_by_line(input_file_path, output_file_path):
     in_solution_block = False
 
     try:
-        with open(input_file_path, 'r', encoding='utf-8') as infile:
+        with open(input_file_path, "r", encoding="utf-8") as infile:
             for line in infile:
-
                 # Check for the BEGIN SOLUTION marker
-                if line.strip().startswith('# BEGIN SOLUTION'):
+                if line.strip().startswith("# BEGIN SOLUTION"):
                     in_solution_block = True
                     match = PROMPT_PATTERN.search(line)
 
@@ -42,14 +42,14 @@ def strip_solutions_line_by_line(input_file_path, output_file_path):
 
                         # Use the extracted prompt as the replacement line
                         # We add proper indentation by inspecting the original prompt's position
-                        indentation = line.split('#')[0]
+                        indentation = line.split("#")[0]
                         prompt = f"{indentation}{prompt_text}\n"
 
                         # Add the prompt
                         output_lines.append(prompt)
 
                 # Check for the END SOLUTION marker
-                elif line.strip().startswith('# END SOLUTION'):
+                elif line.strip().startswith("# END SOLUTION"):
                     if in_solution_block:
                         in_solution_block = False
 
@@ -70,9 +70,11 @@ def strip_solutions_line_by_line(input_file_path, output_file_path):
 
     # Write the results to the output file
     try:
-        with open(output_file_path, 'w', encoding='utf-8') as outfile:
+        with open(output_file_path, "w", encoding="utf-8") as outfile:
             outfile.writelines(output_lines)
-        print(f"Successfully stripped solutions (replacing with prompts) and saved to '{output_file_path}'")
+        print(
+            f"Successfully stripped solutions (replacing with prompts) and saved to '{output_file_path}'"
+        )
     except IOError:
         print(f"Error: Could not write to output file at '{output_file_path}'")
 
@@ -83,15 +85,11 @@ if __name__ == "__main__":
     )
 
     parser.add_argument(
-        "input",
-        type=str,
-        help="Path to the input .py file with solutions."
+        "input", type=str, help="Path to the input .py file with solutions."
     )
 
     parser.add_argument(
-        "output",
-        type=str,
-        help="Path for the new .py file without solutions."
+        "output", type=str, help="Path for the new .py file without solutions."
     )
 
     args = parser.parse_args()

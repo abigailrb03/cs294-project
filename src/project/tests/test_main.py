@@ -1,5 +1,6 @@
 from http import HTTPStatus
 
+
 def test_homepage(client):
     """Test the basic homepage route."""
     response = client.get("/")
