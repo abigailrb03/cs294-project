@@ -1,29 +1,41 @@
-ARCHIVE_NAME := spotify-starter.zip
-
-# Define the specific files and directories you want to include in the zip
-# Separate items with a space. Use 'folder/' for directories.
-FILES_TO_ARCHIVE := \
-    README.md \
-    project/flask_app_starter/ \
-    project/tests/ \
-	requirements.txt \
-	home.png
+BUILD_DIR := .build
+SRC_DIR := src/project
+ARCHIVE_NAME := project.zip
 
 EXCLUDE_PATTERNS := \
-    *__pycache__/* \
-    *.pytest_cache/*
+	.pytest_cache/* \
+	.venv/* \
+	instance/* \
+    *__pycache__/*
 
-.PHONY: archive clean
+RUFF_CMD := uv run ruff
 
-# The archive target: creates the zip file with the specified contents
-archive:
-	@echo "Zipping selected files and folders into $(ARCHIVE_NAME)..."
-	# The -r flag is used for recursive zipping of directories
-	zip -r $(ARCHIVE_NAME) $(FILES_TO_ARCHIVE) -x $(EXCLUDE_PATTERNS)
-	@echo "Archive created successfully: $(ARCHIVE_NAME)"
+.PHONY: build clean lint lint-fix format
 
-# A clean target to remove the generated archive
+build:
+	# Remove existing build directory
+	rm -rf $(BUILD_DIR)
+
+	# Copy the solution code into a starter code directory
+	mkdir $(BUILD_DIR)
+	cp -r $(SRC_DIR) $(BUILD_DIR)
+
+	# Compile solution files to starter files
+	uv run python3 src/compile_starter.py $(SRC_DIR)/daylist/api.py $(BUILD_DIR)/project/daylist/api.py
+
+	# Create starter .zip file
+	cd $(BUILD_DIR) && zip -r $(ARCHIVE_NAME) project/* --exclude $(EXCLUDE_PATTERNS)
+
+	@echo "Built starter code and .zip in $(BUILD_DIR)"
+
 clean:
-	@echo "Cleaning up $(ARCHIVE_NAME)..."
-	rm -f $(ARCHIVE_NAME)
-	@echo "Removed file: $(ARCHIVE_NAME)"
+	rm -rf $(BUILD_DIR)
+
+lint:
+	$(RUFF_CMD) check
+
+lint-fix:
+	$(RUFF_CMD) check --fix
+
+format:
+	$(RUFF_CMD) format
