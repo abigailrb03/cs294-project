@@ -5,5 +5,7 @@ CREATE TABLE songs (
     song_id TEXT NOT NULL,
     track_name TEXT,
     artist_name TEXT,
-    album_image_url TEXT
+    album_name TEXT,
+    album_image_url TEXT,
+    duration FLOAT
 );

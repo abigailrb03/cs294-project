@@ -33,7 +33,9 @@ else:
 song_metadata_df = songs_df[["song_link", "song_id"]]
 song_metadata_df["track_name"] = None
 song_metadata_df["artist_name"] = None
+song_metadata_df["album_name"] = None
 song_metadata_df["album_image_url"] = None
+song_metadata_df["duration"] = None
 
 headers = {"Authorization": f"Bearer {access_token}"}
 
@@ -45,7 +47,9 @@ for idx, song_id in enumerate(song_metadata_df["song_id"]):
         data = response.json()
         song_metadata_df.loc[idx, "track_name"] = data["name"]
         song_metadata_df.loc[idx, "artist_name"] = data["artists"][0]["name"]
+        song_metadata_df.loc[idx, "album_name"] = data["album"]["name"]
         song_metadata_df.loc[idx, "album_image_url"] = data["album"]["images"][0]["url"]
+        song_metadata_df.loc[idx, "duration"] = data["duration_ms"] / 1000
 
     else:
         print(f"Error fetching {song_id}: {response.status_code}")
