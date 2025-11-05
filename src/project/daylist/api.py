@@ -1,10 +1,13 @@
 from flask import Blueprint, jsonify, request
 from http import HTTPStatus
+from random import sample
 
 from . import db
 
 # Create the api Blueprint
 bp = Blueprint("api", __name__)
+
+NUM_SONGS_IN_DAYLIST = 50
 
 
 @bp.route("/api/track-image", methods=["GET"])
@@ -77,3 +80,36 @@ def track_image():
         }
     ), HTTPStatus.OK
     # END SOLUTION
+
+
+@bp.route("/api/daylist", methods=["GET"])
+def daylist():
+    # TODO docstring
+    # TODO starter code markers/prompts
+    # TODO tests
+
+    result = {
+        "title": "",  # TODO(Abby)
+        "image": "",  # TODO(Abby)
+        "playlist": [],
+    }
+
+    database = db.get_db()
+    query = "SELECT * FROM songs"
+    rows = database.execute(query).fetchall()
+    chosen_songs = sample(
+        rows, NUM_SONGS_IN_DAYLIST
+    )  # TODO set seed? make seed a parameter?
+
+    for song in chosen_songs:
+        result["playlist"].append(
+            {
+                "title": song["track_name"],
+                "artist": song["artist_name"],
+                "album": song["album_name"],
+                "album_cover": song["album_image_url"],
+                "duration": int(song["duration"]),  # TODO do we want to round here?
+            }
+        )
+
+    return jsonify(result), HTTPStatus.OK
