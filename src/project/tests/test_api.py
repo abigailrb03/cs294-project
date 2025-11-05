@@ -54,3 +54,30 @@ def test_track_image_request_not_found(client):
         response.json["message"]
         == "Track image for artist Ed Sheeran and song title Thinking Out Loud not found"
     )
+
+
+def test_daylist_playlist_length(client):
+    """
+    Test the /api/daylist endpoint responds with 200 OK
+    and a playlist of 50 songs.
+    """
+    response = client.get("/api/daylist")
+    assert response.status_code == HTTPStatus.OK
+    assert len(response.json["playlist"]) == 50
+
+
+def test_daylist_playlist_random(client):
+    """
+    Test the /api/daylist endpoint responds with 200 OK
+    and randomly generates a playlist of 50 songs.
+    """
+    response_one = client.get("/api/daylist")
+    assert response_one.status_code == HTTPStatus.OK
+    assert len(response_one.json["playlist"]) == 50
+
+    response_two = client.get("/api/daylist")
+    assert response_two.status_code == HTTPStatus.OK
+    assert len(response_two.json["playlist"]) == 50
+
+    # TODO this test can technically fail without seeding
+    assert response_one != response_two

@@ -97,7 +97,9 @@ def daylist():
     database = db.get_db()
     query = "SELECT * FROM songs"
     rows = database.execute(query).fetchall()
-    chosen_songs = sample(rows, NUM_SONGS_IN_DAYLIST)
+    chosen_songs = sample(
+        rows, NUM_SONGS_IN_DAYLIST
+    )  # TODO set seed? make seed a parameter?
 
     for song in chosen_songs:
         result["playlist"].append(

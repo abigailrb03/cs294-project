@@ -1,7 +1,7 @@
 import pytest
 import sqlite3
 
-from daylist import create_app
+from daylist import create_app, db
 
 
 @pytest.fixture()
@@ -29,21 +29,7 @@ def test_db(app):
         app.test_db = conn
 
         # Initialize the schema
-        with app.open_resource("schema.sql") as f:
-            conn.executescript(f.read().decode("utf8"))
-
-        # Seed database
-        conn.execute(
-            "INSERT INTO songs (song_link, song_id, track_name, artist_name, album_image_url) VALUES (?, ?, ?, ?, ?)",
-            (
-                "https://open.spotify.com/track/1jgTiNob5cVyXeJ3WgX5bL?si=ab68100aa0b745a7",
-                "1jgTiNob5cVyXeJ3WgX5bL",
-                "Elizabeth Taylor",
-                "Taylor Swift",
-                "https://i.scdn.co/image/ab67616d0000b273d7812467811a7da6e6a44902",
-            ),
-        )
-        conn.commit()
+        db.init_db()
 
         yield conn
 
