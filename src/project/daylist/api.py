@@ -110,7 +110,7 @@ def daylist():
                 "artist": song["artist_name"],
                 "album": song["album_name"],
                 "album_cover": song["album_image_url"],
-                "duration": int(song["duration"]),  # TODO do we want to round here?
+                "duration": round(song["duration"]),
             }
         )
 
