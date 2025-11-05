@@ -1,4 +1,6 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, url_for
+import requests
+
 from . import db
 
 # Create the main Blueprint
@@ -17,3 +19,10 @@ def show_songs():
         "SELECT track_name, artist_name, album_image_url FROM songs"
     ).fetchall()
     return render_template("songs.html", songs=songs)
+
+
+@bp.route("/daylist")
+def show_daylist():
+    # TODO this bad practice lol
+    daylist = requests.get(url_for("api.daylist", _external=True)).content
+    return render_template("daylist.html", daylist=daylist)
