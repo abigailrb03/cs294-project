@@ -24,5 +24,8 @@ def show_songs():
 @bp.route("/daylist")
 def show_daylist():
     # TODO this bad practice lol
-    daylist = requests.get(url_for("api.daylist", _external=True)).content
-    return render_template("daylist.html", daylist=daylist)
+    daylist_response = requests.get(url_for("api.daylist", _external=True)).json()
+    title = daylist_response["title"]
+    image = daylist_response["image"]
+    playlist = daylist_response["playlist"]
+    return render_template("daylist.html", title=title, image=image, playlist=playlist)

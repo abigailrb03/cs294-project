@@ -89,8 +89,8 @@ def daylist():
     # TODO tests
 
     result = {
-        "title": "",  # TODO(Abby)
-        "image": "",  # TODO(Abby)
+        "title": "manic pixie dream girl monday",  # TODO(Abby)
+        "image": "https://img.freepik.com/premium-photo/blue-neon-color-gradient-horizontal-background_653449-8801.jpg",  # TODO(Abby)
         "playlist": [],
     }
 
