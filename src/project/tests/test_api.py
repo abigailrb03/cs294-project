@@ -56,14 +56,17 @@ def test_track_image_request_not_found(client):
     )
 
 
-def test_daylist_playlist_length(client):
+def test_daylist_playlist_length(client, daylist_playlist_default):
     """
     Test the /api/daylist endpoint responds with 200 OK
-    and a playlist of 50 songs.
+    and a playlist of the correct 50 songs for the default seed.
     """
     response = client.get("/api/daylist")
     assert response.status_code == HTTPStatus.OK
-    assert len(response.json["playlist"]) == 50
+
+    playlist = response.json["playlist"]
+    assert len(playlist) == 50
+    assert playlist == daylist_playlist_default
 
 
 def test_daylist_playlist_diff_seed(client):
