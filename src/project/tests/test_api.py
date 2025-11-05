@@ -66,18 +66,38 @@ def test_daylist_playlist_length(client):
     assert len(response.json["playlist"]) == 50
 
 
-def test_daylist_playlist_random(client):
+def test_daylist_playlist_diff_seed(client):
     """
     Test the /api/daylist endpoint responds with 200 OK
-    and randomly generates a playlist of 50 songs.
+    and randomly generates a playlist of 50 songs
+    that are different when different seeds are provided.
     """
-    response_one = client.get("/api/daylist")
+    response_one = client.get("/api/daylist")  # use default seed of 88
     assert response_one.status_code == HTTPStatus.OK
-    assert len(response_one.json["playlist"]) == 50
+    playlist_one = response_one.json["playlist"]
+    assert len(playlist_one) == 50
 
-    response_two = client.get("/api/daylist")
+    response_two = client.get("/api/daylist", query_string={"seed": 42})
     assert response_two.status_code == HTTPStatus.OK
-    assert len(response_two.json["playlist"]) == 50
+    playlist_two = response_two.json["playlist"]
+    assert len(playlist_two) == 50
 
-    # TODO this test can technically fail without seeding
-    assert response_one != response_two
+    assert playlist_one != playlist_two
+
+
+def test_daylist_playlist_same_seed(client):
+    """
+    Test the /api/daylist endpoint responds with
+    the same random sample of songs when given the same seed.
+    """
+    response_one = client.get("/api/daylist")  # use default seed of 88
+    assert response_one.status_code == HTTPStatus.OK
+    playlist_one = response_one.json["playlist"]
+    assert len(playlist_one) == 50
+
+    response_two = client.get("/api/daylist")  # use default seed of 88
+    assert response_two.status_code == HTTPStatus.OK
+    playlist_two = response_two.json["playlist"]
+    assert len(playlist_two) == 50
+
+    assert playlist_one == playlist_two
