@@ -89,8 +89,8 @@ def daylist():
     # TODO tests
 
     result = {
-        "title": "",  # TODO(Abby)
-        "image": "",  # TODO(Abby)
+        "title": "My Daylist",  # TODO(Abby)
+        "image": "https://news.berkeley.edu/wp-content/uploads/2016/09/Oskicupcake750.jpg",  # TODO(Abby)
         "playlist": [],
     }
 
