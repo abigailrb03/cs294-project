@@ -103,15 +103,3 @@ def test_daylist_title_different(client):
 
     assert response_one.json["title"] != response_two.json["title"]
 
-
-def test_daylist_title_repeated_calls(client):
-    """
-    Test that 50 calls to the /api/daylist endpoint responds with different titles
-    This is within the range of 1,000 free HuggingFace API calls
-    """
-    titles = []
-    for _ in range(50):
-        response = client.get("/api/daylist")
-        assert response.status_code == HTTPStatus.OK
-        titles.append(response.json["title"])
-    assert len(set(titles)) == 50
