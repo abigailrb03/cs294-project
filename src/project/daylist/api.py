@@ -1,8 +1,12 @@
 from flask import Blueprint, jsonify, request
 from http import HTTPStatus
 from random import sample
+import os
+from openai import OpenAI
+from dotenv import dotenv_values
 
 from . import db
+env_vars = dotenv_values(".env")
 
 # Create the api Blueprint
 bp = Blueprint("api", __name__)
@@ -111,5 +115,24 @@ def daylist():
                 "duration": int(song["duration"]),  # TODO do we want to round here?
             }
         )
+
+    titles = [song["title"] for song in result["playlist"]]
+    client = OpenAI(
+        base_url="https://router.huggingface.co/v1",
+        api_key="",
+    )
+
+    completion = client.chat.completions.create(
+        model="openai/gpt-oss-20b:nebius",
+        messages=[
+            {
+                "role": "user",
+                "content": f"Generate a 5 - 8 word playlist title for a playlist with the following songs: {titles}"
+            }
+        ],
+    )
+
+    result["title"] = completion.choices[0].message.content
+    # print(f"DEBUG {completion.choices[0].message.content}")
 
     return jsonify(result), HTTPStatus.OK

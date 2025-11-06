@@ -81,3 +81,37 @@ def test_daylist_playlist_random(client):
 
     # TODO this test can technically fail without seeding
     assert response_one != response_two
+
+def test_daylist_title_ok(client):
+    """
+    Test the /api/daylist endpoint responds with 200 OK
+    """
+    response = client.get("/api/daylist")
+    assert response.status_code == HTTPStatus.OK
+    print("is this running")
+
+
+def test_daylist_title_different(client):
+    """
+    Test that two calls to the /api/daylist endpoint responds with different titles
+    """
+    response_one = client.get("/api/daylist")
+    assert response_one.status_code == HTTPStatus.OK
+
+    response_two = client.get("/api/daylist")
+    assert response_two.status_code == HTTPStatus.OK
+
+    assert response_one.json["title"] != response_two.json["title"]
+
+
+def test_daylist_title_repeated_calls(client):
+    """
+    Test that 50 calls to the /api/daylist endpoint responds with different titles
+    This is within the range of 1,000 free HuggingFace API calls
+    """
+    titles = []
+    for _ in range(50):
+        response = client.get("/api/daylist")
+        assert response.status_code == HTTPStatus.OK
+        titles.append(response.json["title"])
+    assert len(set(titles)) == 50
