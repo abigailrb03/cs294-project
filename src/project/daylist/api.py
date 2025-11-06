@@ -84,24 +84,46 @@ def track_image():
 
 @bp.route("/api/daylist", methods=["GET"])
 def daylist():
-    # TODO docstring
     # TODO starter code markers/prompts
     # TODO tests
+    """
+    Endpoint: GET /api/daylist
+
+    Request query parameters: None
+        Example URL: http://127.0.0.1:5000/api/daylist
+
+    Response format: JSON object with playlist title, playlist cover image, and a playlist.
+
+    A playlist is a list of songs and the playlist contains 50 songs sampled from the database. Each song is stored as a dictionary, which contains the following keys: song title, artist name, album, album cover image URL, and duration
+        Example song below with fake data:
+
+            {
+                "title": "Love Me Not",
+                "artist": "Ravyn Lenae",
+                "album": "Bird's Eye",
+                "album_cover": "https://i.scdn.co/image/ab67616d0000b273ef985ba96e76a9574cc68a30",
+                "duration": 156.0,  # TODO do we want to round here?
+            }
+    """
 
     result = {
-        "title": "",  # TODO(Abby)
-        "image": "",  # TODO(Abby)
+        "title": "",
+        "image": "",
         "playlist": [],
     }
 
     database = db.get_db()
     query = "SELECT * FROM songs"
     rows = database.execute(query).fetchall()
+    # BEGIN SOLUTION PROMPT="chosen_songs = "
     chosen_songs = sample(
         rows, NUM_SONGS_IN_DAYLIST
     )  # TODO set seed? make seed a parameter?
+    # END SOLUTION
 
+    # BEGIN SOLUTION PROMPT="for song in ____:"
     for song in chosen_songs:
+    # END SOLUTION
         result["playlist"].append(
             {
                 "title": song["track_name"],
