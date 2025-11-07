@@ -67,19 +67,17 @@
             font-size: 1rem;
             color: white;
         }
-        .song {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            /* justify-content: space-between; */
-            padding: 10px;
-            border-bottom: 1px solid #333;
-        }
+
         .song img {
             height: 80px;
             width: 80px;
             border-radius: 5px;
             object-fit: cover;
+        }
+        .album-cover-title-artist {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
         .song-title {
             font-weight: bold;
@@ -93,6 +91,19 @@
         .track-number, .song-artist, .album, .duration {
             color: #ccc;
         }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, td {
+            padding: 0.5rem;
+        }
+        thead > tr > td {
+            font-weight: bold;
+        }
+        thead tr {
+            border-bottom: 1px solid #ccc;
+        }
     </style>
 </head>
 <body>
@@ -105,21 +116,32 @@
         </div>
     </div>
 
-    <!-- TODO: refactor into <table> elements? -->
-    {% for song in playlist %}
-        <div class="song">
-            <div class="track-number">{{ loop.index0 + 1 }}</div>
-            <img src="{{ song['album_cover'] }}" alt="{{ song['title'] }}">
-            <div>
-                <div class="song-title">{{ song['title'] }}</div>
-                <div class="song-artist">{{ song['artist'] }}</div>
-            </div>
-            <div class="album">{{ song['album'] }}</div>
-            <div class="duration">{{ song['duration'] // 60 }}:{{ song['duration'] % 60 }}</div>
-        </div>
-    {% else %}
-        <p>No songs found.</p>
-    {% endfor %}
+    <table>
+        <thead>
+            <tr>
+                <td>#</td>
+                <td>Title</td>
+                <td>Album</td>
+                <td>Duration</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for song in playlist %}
+                <tr class="song">
+                    <td class="track-number">{{ loop.index0 + 1 }}</td>
+                    <td class="album-cover-title-artist">
+                        <img src="{{ song['album_cover'] }}" alt="{{ song['title'] }} album cover">
+                        <div>
+                            <div class="song-title">{{ song['title'] }}</div>
+                            <div class="song-artist">{{ song['artist'] }}</div>
+                        </div>
+                    </td>
+                    <td class="album">{{ song['album'] }}</td>
+                    <td class="duration">{{ song['duration'] // 60 }}:{{ "%02d" | format(song['duration'] % 60) }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 
     <script>
         const header = document.getElementById('headerImage');
