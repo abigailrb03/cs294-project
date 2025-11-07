@@ -112,8 +112,8 @@ def daylist():
         }
     """
     result = {
-        "title": "manic pixie dream girl monday",  # TODO(Abby)
-        "image": "https://img.freepik.com/premium-photo/blue-neon-color-gradient-horizontal-background_653449-8801.jpg",  # TODO(Abby)
+        "title": "manic pixie dream girl monday",
+        "image": "https://img.freepik.com/premium-photo/blue-neon-color-gradient-horizontal-background_653449-8801.jpg",
         "playlist": [],
     }
 
