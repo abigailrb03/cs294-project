@@ -256,6 +256,18 @@ Example JSON output with dummy data (for brevity we only include one song in the
 }
 ```
 
+> [!TIP]
+> Python has a built-in `round` function that will round a float to the nearest integer:
+
+```py
+>>> round(5.5)
+6
+>>> round(3.2)
+3
+>>> round(9.7)
+10
+```
+
 > [!NOTE]
 > You can feel free to modify the value of `title` and `image` however
 > you wish as long as the `image` is a valid image URL. Here is an [article that explains how to get an image URL through Google Images](https://support.google.com/websearch/answer/118238?hl=en&co=GENIE.Platform%3DDesktop).
