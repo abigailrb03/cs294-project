@@ -88,21 +88,28 @@ def daylist():
     """
     Endpoint: GET /api/daylist
 
-    Request query parameters: None
-        Example URL: http://127.0.0.1:5000/api/daylist
+    Request query parameters:
+        seed (int): Pseudorandom number generator seed. Optional and defaults to 88
+
+        Example URLs:
+            http://127.0.0.1:5000/api/daylist
+            http://127.0.0.1:5000/api/daylist?seed=42
 
     Response format: JSON object with playlist title, playlist cover image, and a playlist.
 
-    A playlist is a list of songs and the playlist contains 50 songs sampled from the database. Each song is stored as a dictionary, which contains the following keys: song title, artist name, album, album cover image URL, and duration
+    A playlist is a list of songs and the playlist contains 50 songs sampled from the database.
+    Each song is stored as a dictionary, which contains the following keys:
+    song title, artist name, album, album cover image URL, and duration (rounded to the nearest second).
+
         Example song below with fake data:
 
-            {
-                "title": "Love Me Not",
-                "artist": "Ravyn Lenae",
-                "album": "Bird's Eye",
-                "album_cover": "https://i.scdn.co/image/ab67616d0000b273ef985ba96e76a9574cc68a30",
-                "duration": 156.0,  # TODO do we want to round here?
-            }
+        {
+            "title": "Love Me Not",
+            "artist": "Ravyn Lenae",
+            "album": "Bird's Eye",
+            "album_cover": "https://i.scdn.co/image/ab67616d0000b273ef985ba96e76a9574cc68a30",
+            "duration": 156,
+        }
     """
     result = {
         "title": "manic pixie dream girl monday",  # TODO(Abby)
@@ -127,7 +134,7 @@ def daylist():
     # BEGIN SOLUTION PROMPT="for song in _______:"
     for song in chosen_songs:
         # END SOLUTION
-        # BEGIN SOLUTION PROMPT="_______"
+        # BEGIN SOLUTION PROMPT="_______ # feel free to use more than one line"
         result["playlist"].append(
             {
                 "title": song["track_name"],
