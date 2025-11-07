@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, url_for
 import requests
+import random
 
 from . import db
 
@@ -23,7 +24,10 @@ def show_songs():
 
 @bp.route("/daylist")
 def show_daylist():
-    daylist_response = requests.get(url_for("api.daylist", _external=True)).json()
+    seed = random.randint(0, 100)
+    daylist_response = requests.get(
+        url_for("api.daylist", _external=True), params={"seed": seed}
+    ).json()
     title = daylist_response["title"]
     image = daylist_response["image"]
     playlist = daylist_response["playlist"]
