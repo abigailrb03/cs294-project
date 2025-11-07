@@ -41,7 +41,7 @@ def track_image():
     # BEGIN SOLUTION PROMPT="if _______:"
     if artist_name is None or song_title is None:
         # END SOLUTION
-        # BEGIN SOLUTION PROMPT="return jsonify({'YOUR ANSWER HERE': 'AS A DICTIONARY'})"
+        # BEGIN SOLUTION PROMPT="return jsonify({'YOUR ANSWER HERE': 'AS A DICTIONARY'}), HTTPStatus._______"
         return jsonify(
             {
                 "status": "error",
@@ -63,7 +63,7 @@ def track_image():
     # BEGIN SOLUTION PROMPT="if _______:"
     if row is None:
         # END SOLUTION
-        # BEGIN SOLUTION PROMPT="return jsonify({'YOUR ANSWER HERE': 'AS A DICTIONARY'})"
+        # BEGIN SOLUTION PROMPT="return jsonify({'YOUR ANSWER HERE': 'AS A DICTIONARY'}), HTTPStatus._______"
         return jsonify(
             {
                 "status": "error",
@@ -72,7 +72,7 @@ def track_image():
         ), HTTPStatus.NOT_FOUND
         # END SOLUTION
 
-    # BEGIN SOLUTION PROMPT="return jsonify({'YOUR ANSWER HERE': 'AS A DICTIONARY'})"
+    # BEGIN SOLUTION PROMPT="return jsonify({'YOUR ANSWER HERE': 'AS A DICTIONARY'}), HTTPStatus._______"
     return jsonify(
         {
             "artist": artist_name,
@@ -85,10 +85,32 @@ def track_image():
 
 @bp.route("/api/daylist", methods=["GET"])
 def daylist():
-    # TODO docstring
-    # TODO starter code markers/prompts
-    # TODO tests
+    """
+    Endpoint: GET /api/daylist
 
+    Request query parameters:
+        seed (int): Pseudorandom number generator seed. Optional and defaults to 88
+
+        Example URLs:
+            http://127.0.0.1:5000/api/daylist
+            http://127.0.0.1:5000/api/daylist?seed=42
+
+    Response format: JSON object with playlist title, playlist cover image, and a playlist.
+
+    A playlist is a list of songs and the playlist contains 50 songs sampled from the database.
+    Each song is stored as a dictionary, which contains the following keys:
+    song title, artist name, album, album cover image URL, and duration (rounded to the nearest second).
+
+        Example song below with fake data:
+
+        {
+            "title": "Love Me Not",
+            "artist": "Ravyn Lenae",
+            "album": "Bird's Eye",
+            "album_cover": "https://i.scdn.co/image/ab67616d0000b273ef985ba96e76a9574cc68a30",
+            "duration": 156,
+        }
+    """
     result = {
         "title": "manic pixie dream girl monday",  # TODO(Abby)
         "image": "https://img.freepik.com/premium-photo/blue-neon-color-gradient-horizontal-background_653449-8801.jpg",  # TODO(Abby)
@@ -96,14 +118,23 @@ def daylist():
     }
 
     database = db.get_db()
+    # BEGIN SOLUTION PROMPT="query = _______"
     query = "SELECT * FROM songs"
+    # END SOLUTION
     rows = database.execute(query).fetchall()
 
+    # BEGIN SOLUTION PROMPT="seed = _______"
     seed = request.args.get("seed", default=DEFAULT_SEED)
+    # END SOLUTION
     random.seed(seed)
+    # BEGIN SOLUTION PROMPT="chosen_songs = _______"
     chosen_songs = random.sample(rows, NUM_SONGS_IN_DAYLIST)
+    # END SOLUTION
 
+    # BEGIN SOLUTION PROMPT="for song in _______:"
     for song in chosen_songs:
+        # END SOLUTION
+        # BEGIN SOLUTION PROMPT="_______ # feel free to use more than one line"
         result["playlist"].append(
             {
                 "title": song["track_name"],
@@ -113,5 +144,6 @@ def daylist():
                 "duration": round(song["duration"]),
             }
         )
+        # END SOLUTION
 
     return jsonify(result), HTTPStatus.OK
