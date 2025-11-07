@@ -89,7 +89,7 @@ def daylist():
     Endpoint: GET /api/daylist
 
     Request query parameters:
-        seed (int): Pseudorandom number generator seed. Optional and defaults to 88
+        seed (int): Pseudorandom number generator seed. Optional and defaults to `DEFAULT_SEED`
 
         Example URLs:
             http://127.0.0.1:5000/api/daylist
@@ -97,7 +97,7 @@ def daylist():
 
     Response format: JSON object with playlist title, playlist cover image, and a playlist.
 
-    A playlist is a list of songs and the playlist contains 50 songs sampled from the database.
+    A playlist is a list of songs and the playlist contains `NUM_SONGS_IN_DAYLIST` songs sampled from the database.
     Each song is stored as a dictionary, which contains the following keys:
     song title, artist name, album, album cover image URL, and duration (rounded to the nearest second).
 
