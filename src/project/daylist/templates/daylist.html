@@ -80,10 +80,12 @@
         .song-title {
             font-weight: bold;
             color: white;
+            font-size: 1rem;
         }
         .song-artist {
             color: #ccc;
-            margin-left: 5px;
+            margin-top: 5px;
+            font-size: 0.9rem;
         }
     </style>
 </head>
@@ -99,10 +101,11 @@
 
     {% for song in playlist %}
         <div class="song">
+            <div>{{ loop.index0 + 1 }}</div>
             <img src="{{ song['album_cover'] }}" alt="{{ song['title'] }}">
             <div>
-                <span class="song-title">{{ song['title'] }}</span>
-                <span class="song-artist">— {{ song['artist'] }}</span>
+                <div class="song-title">{{ song['title'] }}</div>
+                <div class="song-artist">{{ song['artist'] }}</div>
             </div>
         </div>
     {% else %}
