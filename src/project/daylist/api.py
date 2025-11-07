@@ -1,12 +1,13 @@
 from flask import Blueprint, jsonify, request
 from http import HTTPStatus
-from random import sample
+import random
 
 from . import db
 
 # Create the api Blueprint
 bp = Blueprint("api", __name__)
 
+DEFAULT_SEED = 88
 NUM_SONGS_IN_DAYLIST = 50
 
 
@@ -89,17 +90,18 @@ def daylist():
     # TODO tests
 
     result = {
-        "title": "",  # TODO(Abby)
-        "image": "",  # TODO(Abby)
+        "title": "manic pixie dream girl monday",  # TODO(Abby)
+        "image": "https://img.freepik.com/premium-photo/blue-neon-color-gradient-horizontal-background_653449-8801.jpg",  # TODO(Abby)
         "playlist": [],
     }
 
     database = db.get_db()
     query = "SELECT * FROM songs"
     rows = database.execute(query).fetchall()
-    chosen_songs = sample(
-        rows, NUM_SONGS_IN_DAYLIST
-    )  # TODO set seed? make seed a parameter?
+
+    seed = request.args.get("seed", default=DEFAULT_SEED)
+    random.seed(seed)
+    chosen_songs = random.sample(rows, NUM_SONGS_IN_DAYLIST)
 
     for song in chosen_songs:
         result["playlist"].append(
@@ -108,7 +110,7 @@ def daylist():
                 "artist": song["artist_name"],
                 "album": song["album_name"],
                 "album_cover": song["album_image_url"],
-                "duration": int(song["duration"]),  # TODO do we want to round here?
+                "duration": round(song["duration"]),
             }
         )
 
