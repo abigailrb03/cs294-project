@@ -233,6 +233,10 @@ http://127.0.0.1:5000/api/daylist?seed=42
 
 Respond with a JSON object containing the playlist title, playlist cover image URL, and a playlist. The response status code should be `200 OK`.
 
+We'll break this task into three parts: selecting the songs, generating the title, and generating the playlist cover image.
+
+## Task 1.1: Randomly sample 50 songs
+
 A **playlist** is a list of `NUM_SONGS_IN_DAYLIST` songs randomly sampled from the database.
 
 Each **song** is stored as a dictionary, which contains the following keys: song title, artist name, album, album cover image URL, and duration (rounded to the nearest second).
@@ -271,6 +275,19 @@ Example JSON output with dummy data (for brevity we only include one song in the
 > [!NOTE]
 > You can feel free to modify the value of `title` and `image` however
 > you wish as long as the `image` is a valid image URL. Here is an [article that explains how to get an image URL through Google Images](https://support.google.com/websearch/answer/118238?hl=en&co=GENIE.Platform%3DDesktop).
+
+## Task 1.2: Use LLMs to generate a playlist title
+Rather than having the same playlist `title` every time, let's generate a title based on the songs in our playlist! This is similar to the way Spotify automatically generates a title for your *Daylist*.
+
+To generate playlist titles, we will use generative Artificial Intelligence (AI), specifically large Language Models (LLMs). These models are "trained" on large amounts of data and utilize math to find underlying patterns in the training data. Based on these patterns, models work to predict language patterns and replicate human language ("natural language"). 
+
+There are thousands of models available for use, and for this assignment we will be using *Hugging Face*, a platform that allows users to test out different models. In order to use Hugging Face, you'll need to create a free account [here] (https://huggingface.co/). **Do NOT enter any payment information**.
+
+Now let's test out a few models to see which one you like best! Go to the [model hub] (https://huggingface.co/models?pipeline_tag=text-to-image&inference_provider=fal-ai,hf-inference,nebius,nscale,replicate,together&sort=trending) and select a model that sounds good to you. When you click on a model, you should see something like the page below.
+
+<img width="1165" height="775" alt="Screenshot 2025-11-07 at 10 14 58 AM" src="https://github.com/user-attachments/assets/fc3b5341-ecd2-4409-8808-08010dab12e8" />
+
+This page tells you information about the model, such as the architecture, supported languages, and more. Through this page you will also be able to test out the model to see if it's suited for your needs! In the box that contains *Your sentence here...* write a prompt to generate a playlist title; by doing this, you are *prompting* the model to generate a response. For example if you ask the model "generate a playlist title for a playlist containing mostly Spanish rock songs" you will receive a response back.
 
 ### Tests
 
