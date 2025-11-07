@@ -1,11 +1,161 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Daylist</title>
-    </head>
-    <body>
-        <h1>{{ title }}</h1>
-        <img src="{{ image }}" />
-        {{ playlist }}
-    </body>
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+
+    <title>Daylist</title>
+    <style>
+        body {
+            font-family: 'IBM Plex Sans', sans-serif;
+            margin: 0;
+            background-color: #121212;
+            color: white;
+        }
+        .image-container {
+            position: relative;
+            width: 100%;
+            height: 40vh;
+            overflow: hidden;
+            transition: height 0.3s ease;
+        }
+        .image-container.shrink {
+            position: sticky;
+            top: 0;
+            height: 10vh;
+            z-index: 10;
+        }
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .overlay-text {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 4vw;
+            font-weight: medium;
+            text-align: center;
+            transition: font-size 0.3s ease;
+        }
+        .image-container.shrink .overlay-text {
+            font-size: 2vw;
+        }
+        .bottom-left {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .bottom-left img {
+            height: 50px;
+            width: auto;
+            border-radius: 5px;
+        }
+        .bottom-left p {
+            margin: 0;
+            font-size: 1rem;
+            color: white;
+        }
+
+        .song img {
+            height: 80px;
+            width: 80px;
+            border-radius: 5px;
+            object-fit: cover;
+        }
+        .album-cover-title-artist {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .song-title {
+            font-weight: bold;
+            color: white;
+            font-size: 1rem;
+        }
+        .song-artist {
+            margin-top: 5px;
+            font-size: 0.9rem;
+        }
+        .track-number, .song-artist, .album, .duration {
+            color: #ccc;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, td {
+            padding: 0.5rem;
+        }
+        thead > tr > td {
+            font-weight: bold;
+        }
+        thead tr {
+            border-bottom: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="image-container" id="headerImage">
+        <img src="{{ image }}" alt="playlist image" />
+        <div class="overlay-text">{{ title }}</div>
+        <div class="bottom-left">
+            <img src="https://c88c.org/fa25/assets/images/cs88-logo-new.png" alt="CS88 logo">
+            <p>Made for you by CS88 • {{ playlist|length }} songs</p>
+        </div>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <td>#</td>
+                <td>Title</td>
+                <td>Album</td>
+                <td>Duration</td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for song in playlist %}
+                <tr class="song">
+                    <td class="track-number">{{ loop.index0 + 1 }}</td>
+                    <td class="album-cover-title-artist">
+                        <img src="{{ song['album_cover'] }}" alt="{{ song['title'] }} album cover">
+                        <div>
+                            <div class="song-title">{{ song['title'] }}</div>
+                            <div class="song-artist">{{ song['artist'] }}</div>
+                        </div>
+                    </td>
+                    <td class="album">{{ song['album'] }}</td>
+                    <td class="duration">{{ song['duration'] // 60 }}:{{ "%02d" | format(song['duration'] % 60) }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+        const header = document.getElementById('headerImage');
+        let isShrunk = false;
+
+        window.addEventListener('scroll', function () {
+            if (window.scrollY > header.offsetHeight && !isShrunk) {
+                header.classList.add('shrink');
+                isShrunk = true;
+            } else if (window.scrollY <= 10 && isShrunk) {
+                header.classList.remove('shrink');
+                isShrunk = false;
+            }
+        });
+    </script>
+</body>
 </html>
