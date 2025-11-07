@@ -1,6 +1,9 @@
 from flask import Blueprint, jsonify, request
 from http import HTTPStatus
 import random
+import os
+from openai import OpenAI
+from huggingface_hub import InferenceClient
 
 from . import db
 
@@ -145,5 +148,35 @@ def daylist():
             }
         )
         # END SOLUTION
+
+
+    titles = [song["title"] for song in result["playlist"]]
+    # BEGIN SOLUTION PROMPT="client =  _______:"
+    client = OpenAI(
+        # END SOLUTION
+        # BEGIN SOLUTION PROMPT="_______ # feel free to use more than one line. refer to the hugging face documenation for code suggestions"
+        base_url="https://router.huggingface.co/v1",
+        api_key="",
+    )
+    # END SOLUTION
+
+    completion = client.chat.completions.create(
+        # BEGIN SOLUTION PROMPT="model =  _______:"
+        model="meta-llama/Llama-3.1-8B-Instruct:nebius",
+        # END SOLUTION
+        messages=[
+            {
+                "role": "user",
+                # BEGIN SOLUTION PROMPT="content =  _______: # test out your prompt in hugging face and paste it here!"
+                "content": f"Generate a 5 - 8 word playlist title for a playlist with the following songs: {titles}. ONLY return the playlist title. DO NOT return anything else. For example 'hipster indie-surf early morning'"
+                # END SOLUTION
+            }
+        ],
+    )
+
+    # BEGIN SOLUTION PROMPT="title =  _______:"
+    title = completion.choices[0].message.content
+    # END SOLUTION
+    results["title"] = title
 
     return jsonify(result), HTTPStatus.OK
