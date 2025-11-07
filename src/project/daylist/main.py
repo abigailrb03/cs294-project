@@ -23,7 +23,6 @@ def show_songs():
 
 @bp.route("/daylist")
 def show_daylist():
-    # TODO this bad practice lol
     daylist_response = requests.get(url_for("api.daylist", _external=True)).json()
     title = daylist_response["title"]
     image = daylist_response["image"]
