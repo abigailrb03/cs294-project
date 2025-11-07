@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+
     <title>Daylist</title>
     <style>
         body {
-            font-family: sans-serif;
+            font-family: 'IBM Plex Sans', sans-serif;
             margin: 0;
             background-color: #121212;
             color: white;
@@ -41,7 +45,6 @@
             font-weight: medium;
             text-align: center;
             transition: font-size 0.3s ease;
-            font-family: "Roboto", sans-serif;
         }
         .image-container.shrink .overlay-text {
             font-size: 2vw;
@@ -68,6 +71,7 @@
             display: flex;
             align-items: center;
             gap: 15px;
+            /* justify-content: space-between; */
             padding: 10px;
             border-bottom: 1px solid #333;
         }
@@ -83,9 +87,11 @@
             font-size: 1rem;
         }
         .song-artist {
-            color: #ccc;
             margin-top: 5px;
             font-size: 0.9rem;
+        }
+        .track-number, .song-artist, .album, .duration {
+            color: #ccc;
         }
     </style>
 </head>
@@ -99,14 +105,17 @@
         </div>
     </div>
 
+    <!-- TODO: refactor into <table> elements? -->
     {% for song in playlist %}
         <div class="song">
-            <div>{{ loop.index0 + 1 }}</div>
+            <div class="track-number">{{ loop.index0 + 1 }}</div>
             <img src="{{ song['album_cover'] }}" alt="{{ song['title'] }}">
             <div>
                 <div class="song-title">{{ song['title'] }}</div>
                 <div class="song-artist">{{ song['artist'] }}</div>
             </div>
+            <div class="album">{{ song['album'] }}</div>
+            <div class="duration">{{ song['duration'] // 60 }}:{{ song['duration'] % 60 }}</div>
         </div>
     {% else %}
         <p>No songs found.</p>
