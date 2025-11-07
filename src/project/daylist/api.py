@@ -1,12 +1,13 @@
 from flask import Blueprint, jsonify, request
 from http import HTTPStatus
-from random import sample
+import random
 
 from . import db
 
 # Create the api Blueprint
 bp = Blueprint("api", __name__)
 
+DEFAULT_SEED = 88
 NUM_SONGS_IN_DAYLIST = 50
 
 
@@ -40,7 +41,7 @@ def track_image():
     # BEGIN SOLUTION PROMPT="if _______:"
     if artist_name is None or song_title is None:
         # END SOLUTION
-        # BEGIN SOLUTION PROMPT="return jsonify({'YOUR ANSWER HERE': 'AS A DICTIONARY'})"
+        # BEGIN SOLUTION PROMPT="return jsonify({'YOUR ANSWER HERE': 'AS A DICTIONARY'}), HTTPStatus._______"
         return jsonify(
             {
                 "status": "error",
@@ -62,7 +63,7 @@ def track_image():
     # BEGIN SOLUTION PROMPT="if _______:"
     if row is None:
         # END SOLUTION
-        # BEGIN SOLUTION PROMPT="return jsonify({'YOUR ANSWER HERE': 'AS A DICTIONARY'})"
+        # BEGIN SOLUTION PROMPT="return jsonify({'YOUR ANSWER HERE': 'AS A DICTIONARY'}), HTTPStatus._______"
         return jsonify(
             {
                 "status": "error",
@@ -71,7 +72,7 @@ def track_image():
         ), HTTPStatus.NOT_FOUND
         # END SOLUTION
 
-    # BEGIN SOLUTION PROMPT="return jsonify({'YOUR ANSWER HERE': 'AS A DICTIONARY'})"
+    # BEGIN SOLUTION PROMPT="return jsonify({'YOUR ANSWER HERE': 'AS A DICTIONARY'}), HTTPStatus._______"
     return jsonify(
         {
             "artist": artist_name,
@@ -84,8 +85,6 @@ def track_image():
 
 @bp.route("/api/daylist", methods=["GET"])
 def daylist():
-    # TODO starter code markers/prompts
-    # TODO tests
     """
     Endpoint: GET /api/daylist
 
@@ -105,33 +104,39 @@ def daylist():
                 "duration": 156.0,  # TODO do we want to round here?
             }
     """
-
     result = {
-        "title": "",
-        "image": "",
+        "title": "manic pixie dream girl monday",  # TODO(Abby)
+        "image": "https://img.freepik.com/premium-photo/blue-neon-color-gradient-horizontal-background_653449-8801.jpg",  # TODO(Abby)
         "playlist": [],
     }
 
     database = db.get_db()
+    # BEGIN SOLUTION PROMPT="query = _______"
     query = "SELECT * FROM songs"
+    # END SOLUTION
     rows = database.execute(query).fetchall()
-    # BEGIN SOLUTION PROMPT="chosen_songs = "
-    chosen_songs = sample(
-        rows, NUM_SONGS_IN_DAYLIST
-    )  # TODO set seed? make seed a parameter?
+
+    # BEGIN SOLUTION PROMPT="seed = _______"
+    seed = request.args.get("seed", default=DEFAULT_SEED)
+    # END SOLUTION
+    random.seed(seed)
+    # BEGIN SOLUTION PROMPT="chosen_songs = _______"
+    chosen_songs = random.sample(rows, NUM_SONGS_IN_DAYLIST)
     # END SOLUTION
 
-    # BEGIN SOLUTION PROMPT="for song in ____:"
+    # BEGIN SOLUTION PROMPT="for song in _______:"
     for song in chosen_songs:
-    # END SOLUTION
+        # END SOLUTION
+        # BEGIN SOLUTION PROMPT="_______"
         result["playlist"].append(
             {
                 "title": song["track_name"],
                 "artist": song["artist_name"],
                 "album": song["album_name"],
                 "album_cover": song["album_image_url"],
-                "duration": int(song["duration"]),  # TODO do we want to round here?
+                "duration": round(song["duration"]),
             }
         )
+        # END SOLUTION
 
     return jsonify(result), HTTPStatus.OK
