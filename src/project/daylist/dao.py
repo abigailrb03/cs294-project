@@ -18,7 +18,7 @@ class Song:
         self.duration = duration
         # END SOLUTION
 
-    def __eq__(self, other: object):
+    def __eq__(self, other: object) -> bool:
         # BEGIN SOLUTION PROMPT="pass"
         if type(other) is Song:
             return self.to_dict() == other.to_dict()
@@ -26,7 +26,7 @@ class Song:
         # END SOLUTION
 
     # BEGIN SOLUTION
-    def to_dict(self):
+    def to_dict(self) -> dict:
         return {
             "title": self.track_name,
             "artist": self.artist_name,
@@ -34,6 +34,12 @@ class Song:
             "album_cover": self.album_image_url,
             "duration": round(self.duration),
         }
+
+    def __str__(self) -> str:
+        return repr(self)
+
+    def __repr__(self) -> str:
+        return str(self.to_dict())
 
     # END SOLUTION
 
@@ -44,7 +50,7 @@ class DataAccessObject:
         self.db = db
         # END SOLUTION
 
-    def get_all_songs(self):
+    def get_all_songs(self) -> list[dict]:
         # BEGIN SOLUTION PROMPT="pass"
         all_songs = []
         query = "SELECT * FROM songs"
@@ -61,7 +67,9 @@ class DataAccessObject:
         return all_songs
         # END SOLUTION
 
-    def get_song_by_title_and_artist(self, track_name: str, artist_name: str):
+    def get_song_by_title_and_artist(
+        self, track_name: str, artist_name: str
+    ) -> Song | None:
         # BEGIN SOLUTION PROMPT="pass"
         query = """
                 SELECT *
