@@ -497,10 +497,10 @@ title_prefix = response.message.content
 # This dictionary may be useful for transforming the day of the week into a string
 int_to_day = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 
-day_of_week:str = ________
+day_of_week: str = ________
 
-time_of_day:str = ________ #You may use multiple lines here, ensure 
-title:str = ________
+time_of_day: str = ________ # You may use multiple lines here, ensure 
+title: str = ________
 ```
 
 
