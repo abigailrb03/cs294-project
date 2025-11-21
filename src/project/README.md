@@ -426,6 +426,7 @@ Example JSON output with dummy data (for brevity we only include one song in the
 > You can feel free to modify the value of `title` and `image` however
 > you wish as long as the `image` is a valid image URL. Here is an [article that explains how to get an image URL through Google Images](https://support.google.com/websearch/answer/118238?hl=en&co=GENIE.Platform%3DDesktop).
 
+
 ### Resources
 
 - **Web app framework:** Flask documentation
@@ -449,7 +450,7 @@ To manually test your implementation:
 To formally test your implementation, run the following command from the root directory:
 
 ```sh
-uv run pytest tests/test_api.py -k test_daylist
+uv run pytest tests/test_api.py -k test_daylist_playlist
 ```
 
 ### View Your Daylist
@@ -460,6 +461,72 @@ you can view the fruits of your labor on the frontend!
 1. Ensure your app server is [running](#running-the-web-app-locally)
 2. Navigate to [http://127.0.0.1:5000/daylist](http://127.0.0.1:5000/daylist) to view your daylist
 3. Refresh the page to generate a new random sample of songs
+
+## Task 4: Use LLMs to generate a playlist title
+
+Rather than having the same playlist `title` every time, let's generate a title based on the songs in our playlist! This is similar to the way Spotify automatically generates a title for your *Daylist*.
+
+To generate playlist titles, we will use generative Artificial Intelligence (AI), specifically [Large Language Models (LLMs)](https://en.wikipedia.org/wiki/Large_language_model). These models are trained on large amounts of data and utilize math to find underlying patterns in the training data. Based on these patterns, models work to predict language patterns and replicate human language ("natural language"). 
+
+There are thousands of models available for use and ways to use them. For simplicity and privacy reasons, we will be using [Ollama](https://ollama.com/), a unified platform and framework to use various LLM models for free that doesn't require an account. To get started:
+
+1. Install the [Ollama desktop app](https://ollama.com/download).
+2. Choose a model from their list of [available models](https://ollama.com/search). We recommend using `llama3.2:1b` (Llama is Meta's open-source LLM, the version is 3.2, and there are 1 billion parameters in this model). It will take up about 1.3 GB of space. You are free to try and play around with other models as well. Ollama supports "cloud" models -- we do not recommend this because it requires creating an account and you will have usage limits. (By default, Ollama models are downloaded into your computer for local use).
+    - Once you've chosen a model, you can install it by clicking the download icon in the Ollama desktop app,
+3. Play around with different prompts within the Ollama app. The process of iterating on different prompts to get the best output is known as *prompt engineering*. You may have experimented with this process in Task 1A when you prompted an LLM to assist in designing the `Song` and `DataAccessObject` classes. Once you have found a prompt that works well for you, save it somewhere where you can access it later. 
+4. You should use the LLM to generate an adjective and a progressive verb, for instance "soulful writing" or "hopeful yearning"; you should then attach this prefix to the current time of day (for instance "monday morning"). 
+
+> [!TIP]
+> python's built in `datetime` module allows you to access the current time. See resources below for more information
+
+Here is some starter code you can use to generate a response:
+
+```py
+response: ChatResponse = chat(
+    model="YOUR SELECTED MODEL HERE",
+
+    messages=[
+        {
+            "role": "user",
+            "content": "YOUR PROMPT HERE",
+        },
+    ],
+)
+title_prefix = response.message.content
+
+# This dictionary may be useful for transforming the day of the week into a string
+int_to_day = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+
+day_of_week: str = ________
+
+time_of_day: str = ________ # You may use multiple lines here, ensure 
+title: str = ________
+```
+
+
+## Resources
+
+- **LLM:** [Ollama](https://docs.ollama.com/quickstart#python)
+- **Datetime:** Python `datetime` module
+  - [`datetime.now` method](https://docs.python.org/3/library/datetime.html#datetime.datetime.now)
+  - [`datetime.hour` attribute](https://docs.python.org/3/library/datetime.html#datetime.datetime.hour)
+  - [`datetime.weekday` method](https://docs.python.org/3/library/datetime.html#datetime.datetime.weekday)
+
+### Tests
+
+To manually test your implementation:
+
+1. Ensure your app server is [running](#running-the-web-app-locally)
+2. In your browser, type in the URL to make a request. For example, you can copy and paste the example URLs above and press enter.
+3. You should see some plaintext JSON. Verify that it matches the specifications above.
+
+To formally test your implementation, run the following command from the root directory:
+
+```sh
+uv run pytest tests/test_api.py -k test_daylist_title
+```
+
+To visually check your implementation, follow the directions to [view your daylist](#view-your-daylist)
 
 ## Running unit tests
 
