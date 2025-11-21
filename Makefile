@@ -23,6 +23,7 @@ build:
 
 	# Compile solution files to starter files
 	uv run python3 src/compile_starter.py $(SRC_DIR)/daylist/api.py $(BUILD_PROJ_DIR)/daylist/api.py
+	uv run python3 src/compile_starter.py $(SRC_DIR)/daylist/dao.py $(BUILD_PROJ_DIR)/daylist/dao.py
 
 	# Create starter .zip file
 	cd $(BUILD_DIR) && zip -r $(ARCHIVE_NAME) project/

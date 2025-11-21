@@ -2,6 +2,7 @@ import pytest
 import sqlite3
 
 from daylist import create_app, db
+from daylist.dao import DataAccessObject
 
 
 @pytest.fixture()
@@ -36,6 +37,11 @@ def test_db(app):
         # Clean up
         conn.close()
         del app.test_db  # Remove the attribute
+
+
+@pytest.fixture()
+def dao(test_db):
+    return DataAccessObject(test_db)
 
 
 @pytest.fixture()

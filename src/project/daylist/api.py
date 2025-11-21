@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
 from http import HTTPStatus
 import random
+from .dao import DataAccessObject
 
 from . import db
 
@@ -50,18 +51,15 @@ def track_image():
         ), HTTPStatus.BAD_REQUEST
         # END SOLUTION
 
-    database = db.get_db()
-    # BEGIN SOLUTION PROMPT="query = _______"
-    query = """
-            SELECT album_image_url
-            FROM songs
-            WHERE artist_name = ? AND track_name = ?
-            """
+    # BEGIN SOLUTION PROMPT="dao = _______"
+    dao = DataAccessObject(db.get_db())
     # END SOLUTION
-    row = database.execute(query, (artist_name, song_title)).fetchone()
+    # BEGIN SOLUTION PROMPT="all_songs = _______"
+    song = dao.get_song_by_title_and_artist(song_title, artist_name)
+    # END SOLUTION
 
     # BEGIN SOLUTION PROMPT="if _______:"
-    if row is None:
+    if song is None:
         # END SOLUTION
         # BEGIN SOLUTION PROMPT="return jsonify({'YOUR ANSWER HERE': 'AS A DICTIONARY'}), HTTPStatus._______"
         return jsonify(
@@ -77,7 +75,7 @@ def track_image():
         {
             "artist": artist_name,
             "title": song_title,
-            "image_url": row["album_image_url"],
+            "image_url": song.album_image_url,
         }
     ), HTTPStatus.OK
     # END SOLUTION
@@ -97,14 +95,14 @@ def daylist():
 
     Response format: JSON object with playlist title, playlist cover image, and a playlist.
 
-    A playlist is a list of songs and the playlist contains `NUM_SONGS_IN_DAYLIST` songs sampled from the database.
+    A playlist is a list of songs with `NUM_SONGS_IN_DAYLIST` songs sampled from the database.
     Each song is stored as a dictionary, which contains the following keys:
     song title, artist name, album, album cover image URL, and duration (rounded to the nearest second).
 
         Example song below with fake data:
 
         {
-            "title": "Love Me Not",
+            "title": "Genius",
             "artist": "Ravyn Lenae",
             "album": "Bird's Eye",
             "album_cover": "https://i.scdn.co/image/ab67616d0000b273ef985ba96e76a9574cc68a30",
@@ -117,33 +115,26 @@ def daylist():
         "playlist": [],
     }
 
-    database = db.get_db()
-    # BEGIN SOLUTION PROMPT="query = _______"
-    query = "SELECT * FROM songs"
+    # BEGIN SOLUTION PROMPT="dao = _______"
+    dao = DataAccessObject(db.get_db())
     # END SOLUTION
-    rows = database.execute(query).fetchall()
+    # BEGIN SOLUTION PROMPT="all_songs = _______"
+    all_songs = dao.get_all_songs()
+    # END SOLUTION
 
     # BEGIN SOLUTION PROMPT="seed = _______"
     seed = request.args.get("seed", default=DEFAULT_SEED)
     # END SOLUTION
     random.seed(seed)
+
     # BEGIN SOLUTION PROMPT="chosen_songs = _______"
-    chosen_songs = random.sample(rows, NUM_SONGS_IN_DAYLIST)
+    chosen_songs = random.sample(all_songs, NUM_SONGS_IN_DAYLIST)
     # END SOLUTION
 
-    # BEGIN SOLUTION PROMPT="for song in _______:"
-    for song in chosen_songs:
-        # END SOLUTION
-        # BEGIN SOLUTION PROMPT="_______ # feel free to use more than one line"
-        result["playlist"].append(
-            {
-                "title": song["track_name"],
-                "artist": song["artist_name"],
-                "album": song["album_name"],
-                "album_cover": song["album_image_url"],
-                "duration": round(song["duration"]),
-            }
-        )
-        # END SOLUTION
+    # BEGIN SOLUTION PROMPT="result['playlist'] = _______"
+    result["playlist"] = chosen_songs
+    # END SOLUTION
 
+    # BEGIN SOLUTION PROMPT="return = _______"
     return jsonify(result), HTTPStatus.OK
+    # END SOLUTION
