@@ -114,17 +114,13 @@ def daylist():
     """
     # BEGIN SOLUTION
     response: ChatResponse = chat(
-        # BEGIN SOLUTION PROMPT="model='YOUR SELECTED MODEL HERE'"
         model="llama3.2:1b",
-        # END SOLUTION
         messages=[
             {
                 "role": "user",
-                # BEGIN SOLUTION PROMPT="'content': 'YOUR PROMPT HERE'"
                 "content": f"""create the name of a music playlist with the format "adjective progressive-verb",
                 for example, "epic writing" or "soulful running"
                 ONLY RESPOND WITH THE PLAYLIST TITLE. Do not include quotes. Do not include anything else""",
-                # END SOLUTION
             },
         ],
     )
