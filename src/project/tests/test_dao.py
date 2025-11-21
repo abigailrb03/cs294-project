@@ -1,8 +1,8 @@
-from daylist.dao import DatabaseAccessObject, Song
+from daylist.dao import DataAccessObject, Song
 
 
 def test_dao(test_db):
-    dao = DatabaseAccessObject(test_db)
+    dao = DataAccessObject(test_db)
     songs = dao.get_all_songs()
 
     assert type(songs) is list
@@ -14,7 +14,7 @@ def test_dao(test_db):
 
 
 def test_get_song_by_title_and_artist(test_db):
-    dao = DatabaseAccessObject(test_db)
+    dao = DataAccessObject(test_db)
     song_obj = dao.get_song_by_title_and_artist("Genius", "Ravyn Lenae")
     correct_song = Song(
         "Genius",

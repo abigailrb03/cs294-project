@@ -38,7 +38,7 @@ class Song:
     # END SOLUTION
 
 
-class DatabaseAccessObject:
+class DataAccessObject:
     def __init__(self, db: sqlite3.Connection):
         # BEGIN SOLUTION PROMPT="pass"
         self.db = db
