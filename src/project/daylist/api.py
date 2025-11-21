@@ -51,18 +51,15 @@ def track_image():
         ), HTTPStatus.BAD_REQUEST
         # END SOLUTION
 
-    database = db.get_db()
-    # BEGIN SOLUTION PROMPT="query = _______"
-    query = """
-            SELECT album_image_url
-            FROM songs
-            WHERE artist_name = ? AND track_name = ?
-            """
+    # BEGIN SOLUTION PROMPT="dao = _______"
+    dao = DataAccessObject(db.get_db())
     # END SOLUTION
-    row = database.execute(query, (artist_name, song_title)).fetchone()
+    # BEGIN SOLUTION PROMPT="all_songs = _______"
+    song = dao.get_song_by_title_and_artist(song_title, artist_name)
+    # END SOLUTION
 
     # BEGIN SOLUTION PROMPT="if _______:"
-    if row is None:
+    if song is None:
         # END SOLUTION
         # BEGIN SOLUTION PROMPT="return jsonify({'YOUR ANSWER HERE': 'AS A DICTIONARY'}), HTTPStatus._______"
         return jsonify(
@@ -78,7 +75,7 @@ def track_image():
         {
             "artist": artist_name,
             "title": song_title,
-            "image_url": row["album_image_url"],
+            "image_url": song.album_image_url,
         }
     ), HTTPStatus.OK
     # END SOLUTION
