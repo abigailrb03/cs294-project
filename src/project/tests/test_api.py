@@ -104,3 +104,29 @@ def test_daylist_playlist_same_seed(client):
     assert len(playlist_two) == 50
 
     assert playlist_one == playlist_two
+
+
+def test_daylist_title_different(client):
+    """
+    Test that two calls to the /api/daylist endpoint responds with different titles
+    """
+    response_one = client.get("/api/daylist")
+    assert response_one.status_code == HTTPStatus.OK
+
+    response_two = client.get("/api/daylist")
+    assert response_two.status_code == HTTPStatus.OK
+
+    assert response_one.json["title"] != response_two.json["title"]
+
+
+def test_daylist_title_different_many(client):
+    """
+    Test that 10 calls to the /api/daylist endpoint responds with different titles
+    """
+    titles = []
+    for _ in range(10):
+        response = client.get("/api/daylist")
+        assert response.status_code == HTTPStatus.OK
+        titles.append(response.json["title"])
+
+    assert len(set(titles)) == 10

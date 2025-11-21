@@ -3,6 +3,7 @@ from http import HTTPStatus
 import random
 from ollama import chat
 from ollama import ChatResponse
+from datetime import datetime
 
 from .dao import DataAccessObject
 from . import db
@@ -111,21 +112,41 @@ def daylist():
             "duration": 156,
         }
     """
+    # BEGIN SOLUTION
     response: ChatResponse = chat(
-        # model="gemma3:270m", # uv run ollama pull gemma3:270m (291 MB)
+        # BEGIN SOLUTION PROMPT="model='YOUR SELECTED MODEL HERE'"
         model="llama3.2:1b",
+        # END SOLUTION
         messages=[
             {
                 "role": "user",
-                "content": 'create the name of a music playlist with the format "adjective progressive-verb day-of-week time-of-day"  for example, "epic writing friday morning"  ONLY RESPOND WITH THE PLAYLIST TITLE. Do not include anything else',
+                # BEGIN SOLUTION PROMPT="'content': 'YOUR PROMPT HERE'"
+                "content": f"""create the name of a music playlist with the format "adjective progressive-verb",
+                for example, "epic writing" or "soulful running"
+                ONLY RESPOND WITH THE PLAYLIST TITLE. Do not include quotes. Do not include anything else""",
+                # END SOLUTION
             },
         ],
     )
-    title = response.message.content
+    title_prefix = response.message.content
+    
+    int_to_day = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+    current_datetime = datetime.now()
+    day_of_week = int_to_day[current_datetime.weekday()] # 0 to 6, Mon-Sun
 
+    time_of_day = current_datetime.hour # 0 to 24
+    if 6 <= time_of_day < 12:
+        time_of_day = "Morning"
+    elif 12 <= time_of_day < 6:
+        time_of_day = "Afternoon"
+    else:
+        time_of_day = "Evening"
+    # END SOLUTION
+    
     result = {
-        # "title": "manic pixie dream girl monday",
-        "title": title,
+        # BEGIN SOLUTION PROMPT="'title': 'manic pixie dream girl monday',"
+        "title": f"{title_prefix} {day_of_week} {time_of_day}",
+        # END SOLUTION
         "image": "https://img.freepik.com/premium-photo/blue-neon-color-gradient-horizontal-background_653449-8801.jpg",
         "playlist": [],
     }
