@@ -5,8 +5,19 @@ This is documentation for instructors and course staff.
 ## About
 
 A new full stack web application project for CS 61A and DATA C88C designed by
-Abigail Brooks-Ramirez (@abigailrb03) and Rebecca Dang (@phrdang), advised by
-Profs. Lisa Yan and Michael Ball at UC Berkeley through CS 294-189 Teaching at Scale.
+Abigail Brooks-Ramirez (@abigailrb03, a.brooks [at] berkeley [dot] edu) and
+Rebecca Dang (@phrdang, rdang [at] berkeley [dot] edu), advised by
+Profs. Lisa Yan (yanlisa [at] berkeley [dot] edu) and Michael Ball
+(ball [at] berkeley [dot] edu) at UC Berkeley through CS 294-189 Teaching at Scale.
+
+[Google Drive materials](https://drive.google.com/drive/folders/1VEHW65rTjXktB3lfmgxmQEFzi4K95ONf?usp=sharing)
+
+- `project.zip` is the student-facing starter code
+- CS294: Student Design Doc is the student-facing design doc template for Task 1A
+- Design Doc Grading Rubric is the staff-facing rubric for the design doc
+
+> [!NOTE]
+> Anyone at UC Berkeley can view the Google Drive. Email the authors if you want more permissions.
 
 ## Installation
 
