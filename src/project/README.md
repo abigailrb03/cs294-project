@@ -1,5 +1,32 @@
 # We have Spotify at home
 
+- [We have Spotify at home](#we-have-spotify-at-home)
+    - [Background](#background)
+    - [Being a software engineer](#being-a-software-engineer)
+    - [Task 0: Setup](#task-0-setup)
+        - [Running the web app locally](#running-the-web-app-locally)
+    - [Data Access Object](#data-access-object)
+    - [Task 1A: Object Oriented Design](#task-1a-object-oriented-design)
+    - [Task 1B: Object Oriented Implementation](#task-1b-object-oriented-implementation)
+        - [Resources](#resources)
+        - [Tests](#tests)
+    - [Blueprints and Routes](#blueprints-and-routes)
+    - [Task 2: `GET /api/track-image` endpoint](#task-2-get-apitrack-image-endpoint)
+        - [Request query parameters](#request-query-parameters)
+        - [Response format](#response-format)
+        - [Error handling](#error-handling)
+        - [Resources](#resources-1)
+        - [Tests](#tests-1)
+    - [Task 3: `GET /api/daylist` endpoint](#task-3-get-apidaylist-endpoint)
+        - [Request query parameters](#request-query-parameters-1)
+        - [Response format](#response-format-1)
+        - [Resources](#resources-2)
+        - [Tests](#tests-2)
+        - [View Your Daylist](#view-your-daylist)
+    - [Running unit tests](#running-unit-tests)
+    - [Resources](#resources-3)
+
+
 ## Background
 
 In this project, you will create a *full stack web application* similar to Spotify's [Daylist](https://newsroom.spotify.com/2023-09-12/ever-changing-playlist-daylist-music-for-all-day/) feature, a daily customized music playlist:
@@ -13,17 +40,17 @@ Our frontend is in the `daylist/templates` directory and is written in HTML (Hyp
 Everything that the user *can't* see is considered *backend*; things like OOP class designs, databases, and data manipulation are things that the user doesn't see when they visit a webpage. The backend of this project is written in Python using the [Flask](https://flask.palletsprojects.com/en/stable/) framework and can be found in in `daylist`.
 
 For this project we will ask you to utilize knowledge you've acquired through different parts of this course, such as Python functions, data structures, and control statements, as well as SQL. We have a database of 100 songs stored in a *SQL table*. The code we use to construct the database is in `daylist/db.py`. You don't need to worry about this code, but you should read through `daylist/schema.sql` to familiarize yourself with the structure of the SQL table called `songs` we'll be using. Here are the columns in our SQL table:
-| Column           | Data Type |
-|------------------|-----------|
-| id               | INTEGER   |
-| song_link        | TEXT      |
-| song_id          | TEXT      |
-| track_name       | TEXT      |
-| artist_name      | TEXT      |
-| album_name       | TEXT      |
-| album_image_url  | TEXT      |
-| duration         | FLOAT     |
 
+| Column             | Data Type   | Description                                           |
+| ------------------ | ----------- | ----------------------------------------------------- |
+| `id`               | `INTEGER`   | Unique ID for each song, specific to our database.    |
+| `song_link`        | `TEXT`      | URL of the song on Spotify                            |
+| `song_id`          | `TEXT`      | Unique ID for each song, used by the Spotify platform |
+| `track_name`       | `TEXT`      | Song title                                            |
+| `artist_name`      | `TEXT`      | Artist name                                           |
+| `album_name`       | `TEXT`      | Name of album the song is from                        |
+| `album_image_url`  | `TEXT`      | Image URL of the album the song is from               |
+| `duration`         | `FLOAT`     | Duration of the song in seconds                       |
 
 The code that sets up our website lives in `daylist/__init__.py`. Just like how a class in Python needs to be initialized before you can use it, our web app also needs to be initialized before it can run. It is not super important for you to understand everything in this file, but what you should know is that it:
 
@@ -102,33 +129,74 @@ You can keep this local web server running as you work on the project. Whenever 
 > You must include the `--debug` command line flag so that any changes you make to the code will appear when you refresh as the server runs. If you do not include that flag, if you make a change in your code it will not be reflected until you quit the server and restart it.
 
 ## Data Access Object
-Though we don't need to know *exactly* how the database is initialized in this project, we do need to access the data somehow in order to create our Daylist. To do this, we'll create a *Data Access Object* which will allow you to access data in the database and initialize song objects. 
+
+Though we don't need to know *exactly* how the database is initialized in this project, we do need to access the data somehow in order to create our Daylist. To do this, we'll create a [*Data Access Object* (DAO)](https://en.wikipedia.org/wiki/Data_access_object) which will allow you to access data in the database and initialize song objects. The DAO pattern is often used in software engineering to have a layer of abstraction between the database and the backend code. For example, we may want to restrict what database operations can be performed by the backend code to avoid accidentally deleting or overwriting data. This also makes it easier to swap out database systems if we choose a different system.
 
 ## Task 1A: Object Oriented Design
-In `DAO.py` you will create two classes: `DatabaseAccessObject` and `Song`.
 
-The `Song` class should allow you to initialize a song object. A `Song` instance must keep track of the songs' title, artist name, album name, album image (which is a url), and the duration of the song (rounded to the nearest second).
+In `dao.py` you will implement two classes: `DataAccessObject` and `Song`.
 
-The `DatabaseAccessObject` will allow you to access the database directly and initialize song objects that you can later use. Your design should support the following methods:
-- `get_all_songs(self)` : this method takes no arguments and returns a list of `Songs` where each song is represented as a dictionary. For instance, if the database only contained one song, `get_all_songs` should return the list below. *Note:* It is important that the names of the keys are identical to the example below so that our frontend renders correctly.
+The `Song` class should allow you to initialize a song object. A `Song` instance must keep track of the song's title, artist name, album name, album image (which is a url), and the duration of the song (rounded to the nearest second).
+
+The `DataAccessObject` will allow you to access the database directly and initialize song objects that you can later use. Your design must support the following methods:
+
+- `get_all_songs(self)` : This method takes no arguments (besides `self`) and returns a list of `Songs` where each song is represented as a dictionary. For instance, if the database only contained one song, `get_all_songs` should return the list below.
+
+> [!IMPORTANT]
+> The names of the dictionary keys must be identical to the example below so that our frontend renders correctly.
+
+> [!IMPORTANT]
+> The duration stored in the database is of type `FLOAT` because it may contain fractions of a second.
+> Your `get_all_songs` method should return the duration rounded to the nearest second, as an integer.
+
 ```
-[{
-    "title": "Love Me Not",
-    "artist": "Ravyn Lenae",
-    "album": "Bird's Eye",
-    "album_cover": "https://i.scdn.co/image/ab67616d0000b273ef985ba96e76a9574cc68a30",
-    "duration": 156,
-}]
+[
+    {
+        "title": "Genius",
+        "artist": "Ravyn Lenae",
+        "album": "Bird's Eye",
+        "album_cover": "https://i.scdn.co/image/ab67616d0000b273ef985ba96e76a9574cc68a30",
+        "duration": 156,
+    }
+]
 ```
-- `get_song_by_title_and_artist(self, track_name, artist_name)` : given the song title (`track_name`) and song artist (`track_name`) return a `Song` object. If no such song exists in the database, return `None`
+- `get_song_by_title_and_artist(self, track_name, artist_name)`: Given the song title (`track_name`) and song artist (`artist_name`), return the corresponding `Song` object. If no such song exists in the database, return `None`. Assume that the combination of song title and artist will always be unique.
+- `__eq__(self, other)`: The `__eq__` method is a special method that allows us to implement behavior to check whether the current `Song` object is equal to another object (`other`). It is called when the `==` operator is used on a `Song` object. It should return:
+    - `True` if `other` is also `Song` object with the exact same properties
+    - `False` if `other` is also `Song` object but with 1 or more **different** properties
+    - `NotImplemented` if `other` is not a `Song` object
 
-Before beginning to implement the classes described above, take a moment to consider the design choices you will need to make. Make a copy of the following [document](https://docs.google.com/document/d/1fDjmX4Y9SwsItC0m_UQPmtVgq9kvGf6audSEduDCJg8/edit?usp=sharing) and fill it out.
+We **highly recommend** that you also implement the `__str__` and `__repr__` methods for the `Song` class so that you are able to easily visualize the representation of a song. This will especially be helpful for debugging tests. You can implement these however you wish.
+
+> [!NOTE]
+> For the `DataAccessObject`, you will need to access the underlying database, you can do this by calling `db.get_db()`. Our underlying database is a SQL table, so you will need to write a SQL query in order to fetch data.
+
+Before implementing large, complex systems, engineers in industry and academia will often write a *design document* to outline the context of the problem they're trying to solve, their data schema/modeling, etc. This allows them to make their ideas more concrete, spot issues early on, and collaborate with others to improve their design.
+
+To get some experience with this real-world practice, your task is to:
+
+1. Make a copy of this [design doc template](https://docs.google.com/document/d/1fDjmX4Y9SwsItC0m_UQPmtVgq9kvGf6audSEduDCJg8/edit?usp=sharing) and fill it out.
+2. Export the Google Doc to a PDF and submit it to the relevant Gradescope assignment.
 
 ## Task 1B: Object Oriented Implementation
 
-Implement the classes and methods you described in Task 1B by completing `DAO.py`. Make sure not to delete the exsiting import statement at the top of the file.
+Implement the classes and methods you described in Task 1A by completing `dao.py`.
 
-For the `DatabaseAccessObject`, you will need to access the underlying database, you can do this by calling `db.get_db()`. Our underlying database is a SQL table, so you will need to write a SQL query in order to fetch data.
+> [!IMPORTANT]
+> Do not delete any of the starter code; only add on to it. This ensures your methods are in the correct
+> format so that the autograder tests will work.
+
+> [!TIP]
+> Python has a built-in `round` function that will round a float to the nearest integer:
+
+```py
+>>> round(5.5)
+6
+>>> round(3.2)
+3
+>>> round(9.7)
+10
+```
 
 > [!TIP]
 > When writing a SQL query (setting the `query` variable), you can use a multi-line Python string enclosed in triple quotes, e.g.:
@@ -141,15 +209,46 @@ query = """
         """
 ```
 
-> [!IMPORTANT]
-> In order to prevent [SQL injection attacks](https://en.wikipedia.org/wiki/SQL_injection), you should pass the values of variables into a SQL query using [placeholders](https://docs.python.org/3/library/sqlite3.html#sqlite3-placeholders). If you are following the starter code, you will want to use the `?` placeholder for the artist name and song title, which are already passed in as a tuple of query parameters in the line:
+> [!TIP]
+> Python has a built-in `type` function that you can use to check the data type of some object:
 
 ```py
-row = database.execute(query, (artist_name, song_title)).fetchone()
+>>> type(5) is int
+True
+>>> type(103.32) is str
+False
 ```
 
-`.fetchone()` will fetch the first row that matches `query`. Alternatively, you may use `fetchall()` if you would like to fetch all rows that match the query. Both methods will return `None` if there are no matching rows.
+<!-- TODO update based on new dao tests -->
 
+> [!IMPORTANT]
+> In order to prevent [SQL injection attacks](https://en.wikipedia.org/wiki/SQL_injection), you should pass the values of variables into a SQL query using [placeholders](https://docs.python.org/3/library/sqlite3.html#sqlite3-placeholders). If you are following the starter code, you will want to use the `?` placeholder for the artist name and song title, which are already passed in as a tuple of query parameters in the line:
+> ```py
+> row = database.execute(query, (artist_name, track_name)).fetchone()
+> ```
+> If you want to learn more, take [CS 161: Computer Security](https://cs161.org)!
+
+### Resources
+
+- **Database:** `sqlite3` documentation
+    - [Tutorial](https://docs.python.org/3/library/sqlite3.html#tutorial)
+    - [`Connection.execute` method](https://docs.python.org/3/library/sqlite3.html#sqlite3.Connection.execute)
+    - [`fetchone` method](https://docs.python.org/3/library/sqlite3.html#sqlite3.Cursor.fetchone)
+    - [`fetchall` method](https://docs.python.org/3/library/sqlite3.html#sqlite3.Cursor.fetchall)
+    - [`sqlite3.Row`](https://docs.python.org/3/library/sqlite3.html#row-objects) and [how to create and use row factories](https://docs.python.org/3/library/sqlite3.html#sqlite3-howto-row-factory)
+        - **Note:** We have setup the database in this application so that it uses a [SQLite Row Factory](https://docs.python.org/3/library/sqlite3.html#sqlite3.Connection.row_factory), which means that when you execute a query and fetch its results, it will be 1 or more `Row` objects.
+- **OOP in Python**
+    - [`__eq__` method](https://docs.python.org/3/reference/datamodel.html#object.__eq__)
+    - [`__repr__` method](https://docs.python.org/3/reference/datamodel.html#object.__repr__)
+    - [`__repr__` method](https://docs.python.org/3/reference/datamodel.html#object.__str__)
+
+### Tests
+
+To formally test your implementation, run the following command from the root directory:
+
+```sh
+uv run pytest tests/test_dao.py
+```
 
 ## Blueprints and Routes
 
@@ -238,6 +337,15 @@ A robust web API should also handle errors! Your implementation should explicitl
 > [!TIP]
 > In order to check if a user has provided the 2 required query parameters, it will help to set a default dummy value for the `artist_name` and `song_title` variables. There is a way to do this using Flask's `request.args.get` method.
 
+### Resources
+
+- **Web app framework:** Flask documentation
+    - [Routing](https://flask.palletsprojects.com/en/stable/quickstart/#routing)
+    - [Accessing request data](https://flask.palletsprojects.com/en/stable/quickstart/#accessing-request-data)
+    - [APIs with JSON](https://flask.palletsprojects.com/en/stable/quickstart/#apis-with-json)
+- **HTTP status codes:** `http` module documentation
+    - [`HTTPStatus`](https://docs.python.org/3/library/http.html#http-status-codes) (a class that defines the HTTP status codes so you don't have to hardcode numbers)
+
 ### Tests
 
 To manually test your implementation:
@@ -288,7 +396,7 @@ Example JSON output with dummy data (for brevity we only include one song in the
     "image": "https://img.freepik.com/premium-photo/blue-neon-color-gradient-horizontal-background_653449-8801.jpg",
     "playlist": [
         {
-            "title": "Love Me Not",
+            "title": "Genius",
             "artist": "Ravyn Lenae",
             "album": "Bird's Eye",
             "album_cover": "https://i.scdn.co/image/ab67616d0000b273ef985ba96e76a9574cc68a30",
@@ -299,23 +407,24 @@ Example JSON output with dummy data (for brevity we only include one song in the
 }
 ```
 
-*Hint:* Think about how you might be able to use the `DatabaseAccessObject` you defined in Task 1.
-
 > [!TIP]
-> Python has a built-in `round` function that will round a float to the nearest integer:
-
-```py
->>> round(5.5)
-6
->>> round(3.2)
-3
->>> round(9.7)
-10
-```
+> Think about how you might be able to use the `DataAccessObject` you defined in Task 1.
 
 > [!NOTE]
 > You can feel free to modify the value of `title` and `image` however
 > you wish as long as the `image` is a valid image URL. Here is an [article that explains how to get an image URL through Google Images](https://support.google.com/websearch/answer/118238?hl=en&co=GENIE.Platform%3DDesktop).
+
+### Resources
+
+- **Web app framework:** Flask documentation
+    - [Routing](https://flask.palletsprojects.com/en/stable/quickstart/#routing)
+    - [Accessing request data](https://flask.palletsprojects.com/en/stable/quickstart/#accessing-request-data)
+    - [APIs with JSON](https://flask.palletsprojects.com/en/stable/quickstart/#apis-with-json)
+- **HTTP status codes:** `http` module documentation
+    - [`HTTPStatus`](https://docs.python.org/3/library/http.html#http-status-codes) (a class that defines the HTTP status codes so you don't have to hardcode numbers)
+- **Pseudorandom number generation:** `random` module documentation
+    - [`random.seed`](https://docs.python.org/3/library/random.html#random.seed)
+    - [`random.sample`](https://docs.python.org/3/library/random.html#random.sample)
 
 ### Tests
 
@@ -357,21 +466,17 @@ uv run pytest path/to/file.py
 
 # Run tests in a specific file with particular test names
 uv run pytest path/to/file.py -k test_name
+
+# Add the -s flag to tun tests and show print output (which is hidden by default)
+# You can specify a file or test name in addition to this
+uv run pytest -s
 ```
 
 ## Resources
 
-- **Web app framework:** Flask documentation
-    - [Routing](https://flask.palletsprojects.com/en/stable/quickstart/#routing)
-    - [Accessing request data](https://flask.palletsprojects.com/en/stable/quickstart/#accessing-request-data)
-    - [APIs with JSON](https://flask.palletsprojects.com/en/stable/quickstart/#apis-with-json)
-- **Database:** `sqlite3` documentation
-    - [`execute` method](https://docs.python.org/3/library/sqlite3.html#sqlite3.Cursor.execute)
-    - [`fetchone` method](https://docs.python.org/3/library/sqlite3.html#sqlite3.Cursor.fetchone)
-    - [`sqlite3.Row`](https://docs.python.org/3/library/sqlite3.html#row-objects) and [how to create and use row factories](https://docs.python.org/3/library/sqlite3.html#sqlite3-howto-row-factory)
-        - **Note:** We have setup the database in this application so that it uses a [SQLite Row Factory](https://docs.python.org/3/library/sqlite3.html#sqlite3.Connection.row_factory), which means that when you execute a query and fetch its results, it will be 1 or more `Row` objects.
-- **HTTP status codes:** `http` module documentation
-    - [`HTTPStatus`](https://docs.python.org/3/library/http.html#http-status-codes) (a class that defines the HTTP status codes so you don't have to hardcode numbers)
-- **Pseudorandom number generation:** `random` module documentation
-    - [`random.seed`](https://docs.python.org/3/library/random.html#random.seed)
-    - [`random.sample`](https://docs.python.org/3/library/random.html#random.sample)
+- **Database**: [`sqlite3` module documentation](https://docs.python.org/3/library/sqlite3.html)
+- **Web app framework:** [Flask documentation](https://flask.palletsprojects.com/en/stable/)
+- **HTTP status codes:** [`http` module documentation](https://docs.python.org/3/library/http.html)
+- **Pseudorandom number generation:** [`random` module documentation](https://docs.python.org/3/library/random.html)
+- **Build system:** [`uv` docs](https://docs.astral.sh/uv/)
+- **Test system** [`pytest` docs](https://docs.pytest.org/en/stable/)
