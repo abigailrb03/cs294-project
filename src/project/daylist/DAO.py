@@ -24,7 +24,7 @@ class DatabaseAccessObject:
         self.songs = []
 
     def get_all_songs(self):
-        songs = []
+        self.songs = []
         query = "SELECT * FROM songs"
 
         for row in self.db.execute(query).fetchall():
@@ -38,7 +38,7 @@ class DatabaseAccessObject:
                 FROM songs
                 WHERE artist_name = ? AND track_name = ?
                 """
-        row = self.db.execute(query, (artist_name, song_title)).fetchone()
+        row = self.db.execute(query, (artist_name, track_name)).fetchone()
 
         if row is not None:
             return Song(row['track_name'], row['artist_name'], row['album_name'], row['album_image_url'], round(row['duration']))
