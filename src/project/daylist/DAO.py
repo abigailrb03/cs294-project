@@ -21,16 +21,15 @@ class Song:
 class DatabaseAccessObject:
     def __init__(self):
         self.db = db.get_db()
-        self.songs = []
 
     def get_all_songs(self):
-        self.songs = []
+        all_songs = []
         query = "SELECT * FROM songs"
 
         for row in self.db.execute(query).fetchall():
             song = Song(row['track_name'], row['artist_name'], row['album_name'], row['album_image_url'], row['duration'])
-            self.songs.append(song.to_dict())
-        return self.songs
+            all_songs.append(song.to_dict())
+        return all_songs
 
     def get_song_by_title_and_artist(self, track_name, artist_name):
         query = """

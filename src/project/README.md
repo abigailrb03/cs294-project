@@ -12,7 +12,18 @@ Our frontend is in the `daylist/templates` directory and is written in HTML (Hyp
 
 Everything that the user *can't* see is considered *backend*; things like OOP class designs, databases, and data manipulation are things that the user doesn't see when they visit a webpage. The backend of this project is written in Python using the [Flask](https://flask.palletsprojects.com/en/stable/) framework and can be found in in `daylist`.
 
-For this project we will ask you to utilize knowledge you've acquired through different parts of this course, such as Python functions, data structures, and control statements, as well as SQL. We have a database of 100 songs stored in a *SQL table*. The code we use to construct the database is in `daylist/db.py`. You don't need to worry about this code, but you should read through `daylist/schema.sql` to familiarize yourself with the structure of the SQL table called `songs` we'll be using.
+For this project we will ask you to utilize knowledge you've acquired through different parts of this course, such as Python functions, data structures, and control statements, as well as SQL. We have a database of 100 songs stored in a *SQL table*. The code we use to construct the database is in `daylist/db.py`. You don't need to worry about this code, but you should read through `daylist/schema.sql` to familiarize yourself with the structure of the SQL table called `songs` we'll be using. Here are the columns in our SQL table:
+| Column           | Data Type |
+|------------------|-----------|
+| id               | INTEGER   |
+| song_link        | TEXT      |
+| song_id          | TEXT      |
+| track_name       | TEXT      |
+| artist_name      | TEXT      |
+| album_name       | TEXT      |
+| album_image_url  | TEXT      |
+| duration         | FLOAT     |
+
 
 The code that sets up our website lives in `daylist/__init__.py`. Just like how a class in Python needs to be initialized before you can use it, our web app also needs to be initialized before it can run. It is not super important for you to understand everything in this file, but what you should know is that it:
 
@@ -90,6 +101,56 @@ You can keep this local web server running as you work on the project. Whenever 
 > [!IMPORTANT]
 > You must include the `--debug` command line flag so that any changes you make to the code will appear when you refresh as the server runs. If you do not include that flag, if you make a change in your code it will not be reflected until you quit the server and restart it.
 
+## Data Access Object
+Though we don't need to know *exactly* how the database is initialized in this project, we do need to access the data somehow in order to create our Daylist. To do this, we'll create a *Data Access Object* which will allow you to access data in the database and initialize song objects. 
+
+## Task 1A: Object Oriented Design
+In `DAO.py` you will create two classes: `DatabaseAccessObject` and `Song`.
+
+The `Song` class should allow you to initialize a song object. A `Song` instance must keep track of the songs' title, artist name, album name, album image (which is a url), and the duration of the song (rounded to the nearest second).
+
+The `DatabaseAccessObject` will allow you to access the database directly and initialize song objects that you can later use. Your design should support the following methods:
+- `get_all_songs(self)` : this method takes no arguments and returns a list of `Songs` where each song is represented as a dictionary. For instance, if the database only contained one song, `get_all_songs` should return the list below. *Note:* It is important that the names of the keys are identical to the example below so that our frontend renders correctly.
+```
+[{
+    "title": "Love Me Not",
+    "artist": "Ravyn Lenae",
+    "album": "Bird's Eye",
+    "album_cover": "https://i.scdn.co/image/ab67616d0000b273ef985ba96e76a9574cc68a30",
+    "duration": 156,
+}]
+```
+- `get_song_by_title_and_artist(self, track_name, artist_name)` : given the song title (`track_name`) and song artist (`track_name`) return a `Song` object. If no such song exists in the database, return `None`
+
+Before beginning to implement the classes described above, take a moment to consider the design choices you will need to make. Make a copy of the following [document](https://docs.google.com/document/d/1fDjmX4Y9SwsItC0m_UQPmtVgq9kvGf6audSEduDCJg8/edit?usp=sharing) and fill it out.
+
+## Task 1B: Object Oriented Implementation
+
+Implement the classes and methods you described in Task 1B by completing `DAO.py`. Make sure not to delete the exsiting import statement at the top of the file.
+
+For the `DatabaseAccessObject`, you will need to access the underlying database, you can do this by calling `db.get_db()`. Our underlying database is a SQL table, so you will need to write a SQL query in order to fetch data.
+
+> [!TIP]
+> When writing a SQL query (setting the `query` variable), you can use a multi-line Python string enclosed in triple quotes, e.g.:
+
+```py
+query = """
+        SELECT ...
+        FROM ...
+        WHERE ...
+        """
+```
+
+> [!IMPORTANT]
+> In order to prevent [SQL injection attacks](https://en.wikipedia.org/wiki/SQL_injection), you should pass the values of variables into a SQL query using [placeholders](https://docs.python.org/3/library/sqlite3.html#sqlite3-placeholders). If you are following the starter code, you will want to use the `?` placeholder for the artist name and song title, which are already passed in as a tuple of query parameters in the line:
+
+```py
+row = database.execute(query, (artist_name, song_title)).fetchone()
+```
+
+`.fetchone()` will fetch the first row that matches `query`. Alternatively, you may use `fetchall()` if you would like to fetch all rows that match the query. Both methods will return `None` if there are no matching rows.
+
+
 ## Blueprints and Routes
 
 The `daylist/main.py` and `daylist/api.py` files define the `main` and `api` Blueprints, respectively. Each of these files contains functions which define *routes* that correspond to different pages on the website (in the case of the `main` Blueprint) or different *API* endpoints on the website (in the case of the `api` Blueprint).
@@ -123,7 +184,7 @@ When the programmer uses the API, this is called making a *request*. Then, the w
 | 400 | BAD REQUEST | Something went wrong on the programmer's side, e.g. they provided bad input parameters |
 | 404 | NOT FOUND | The resource the programmer requested is not found in the backend |
 
-## Task 1: `GET /api/track-image` endpoint
+## Task 2: `GET /api/track-image` endpoint
 
 As a warmup, let's make our own API endpoint! Open the `daylist/api.py` file. We've provided some skeleton code for you to implement the `track_image` function which defines the behavior for the `GET /api/track-image` endpoint, but you are free to modify the body of the `track_image` function as you wish.
 
@@ -177,24 +238,6 @@ A robust web API should also handle errors! Your implementation should explicitl
 > [!TIP]
 > In order to check if a user has provided the 2 required query parameters, it will help to set a default dummy value for the `artist_name` and `song_title` variables. There is a way to do this using Flask's `request.args.get` method.
 
-> [!TIP]
-> When writing a SQL query (setting the `query` variable), you can use a multi-line Python string enclosed in triple quotes, e.g.:
-
-```py
-query = """
-        SELECT ...
-        FROM ...
-        WHERE ...
-        """
-```
-
-> [!IMPORTANT]
-> In order to prevent [SQL injection attacks](https://en.wikipedia.org/wiki/SQL_injection), you should pass the values of variables into a SQL query using [placeholders](https://docs.python.org/3/library/sqlite3.html#sqlite3-placeholders). If you are following the starter code, you will want to use the `?` placeholder for the artist name and song title, which are already passed in as a tuple of query parameters in the line:
-
-```py
-row = database.execute(query, (artist_name, song_title)).fetchone()
-```
-
 ### Tests
 
 To manually test your implementation:
@@ -211,7 +254,7 @@ To formally test your implementation, run the following command from the root di
 uv run pytest tests/test_api.py -k test_track_image
 ```
 
-## Task 1: `GET /api/daylist` endpoint
+## Task 3: `GET /api/daylist` endpoint
 
 Now let's actually make our own Daylist by implementing another API endpoint! Open the `daylist/api.py` file. We've provided some skeleton code for you to implement the `daylist` function which defines the behavior for the `GET /api/daylist` endpoint, but you are free to modify the body of the `daylist` function as you wish.
 
@@ -255,6 +298,8 @@ Example JSON output with dummy data (for brevity we only include one song in the
     ]
 }
 ```
+
+*Hint:* Think about how you might be able to use the `DatabaseAccessObject` you defined in Task 1.
 
 > [!TIP]
 > Python has a built-in `round` function that will round a float to the nearest integer:
