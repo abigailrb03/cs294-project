@@ -1,5 +1,5 @@
 from . import db
-
+# BEGIN SOLUTION PROMPT="class DatabaseAccessObject: pass"
 class Song:
     def __init__(self, track_name, artist_name, album_name, album_image_url, duration):
         self.track_name = track_name
@@ -25,9 +25,7 @@ class DatabaseAccessObject:
 
     def get_all_songs(self):
         songs = []
-        # BEGIN SOLUTION PROMPT="query = _______"
         query = "SELECT * FROM songs"
-        # END SOLUTION
 
         for row in self.db.execute(query).fetchall():
             song = Song(row['track_name'], row['artist_name'], row['album_name'], row['album_image_url'], row['duration'])
@@ -35,18 +33,13 @@ class DatabaseAccessObject:
         return self.songs
 
     def get_song_by_title_and_artist(self, track_name, artist_name):
-        # BEGIN SOLUTION PROMPT="query = _______"
         query = """
                 SELECT *
                 FROM songs
                 WHERE artist_name = ? AND track_name = ?
                 """
-        # END SOLUTION
         row = self.db.execute(query, (artist_name, song_title)).fetchone()
 
-        # BEGIN SOLUTION PROMPT="if _______:"
         if row is not None:
-            # END SOLUTION
-            # BEGIN SOLUTION PROMPT="return _______"
             return Song(row['track_name'], row['artist_name'], row['album_name'], row['album_image_url'], round(row['duration']))
-            # END SOLUTION
+# END SOLUTION
