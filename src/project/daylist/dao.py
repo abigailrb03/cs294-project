@@ -22,7 +22,7 @@ class Song:
         # BEGIN SOLUTION PROMPT="pass"
         if type(other) is Song:
             return self.to_dict() == other.to_dict()
-        return False
+        return NotImplemented
         # END SOLUTION
 
     # BEGIN SOLUTION
@@ -70,13 +70,17 @@ class DataAccessObject:
     def get_song_by_title_and_artist(
         self, track_name: str, artist_name: str
     ) -> Song | None:
-        # BEGIN SOLUTION PROMPT="pass"
+        # BEGIN SOLUTION PROMPT="query = _____"
         query = """
                 SELECT *
                 FROM songs
-                WHERE track_name = ? AND artist_name = ?
+                WHERE artist_name = ? AND track_name = ?
                 """
-        row = self.db.execute(query, (track_name, artist_name)).fetchone()
+        # END SOLUTION
+
+        row = self.db.execute(query, (artist_name, track_name)).fetchone()
+
+        # BEGIN SOLUTION PROMPT="# add the rest of your code here"
         if row:
             return Song(
                 row["track_name"],
