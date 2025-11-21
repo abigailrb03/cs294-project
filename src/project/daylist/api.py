@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request
 from http import HTTPStatus
 import random
+from .DAO import DatabaseAccessObject
 
 from . import db
 
@@ -97,7 +98,7 @@ def daylist():
 
     Response format: JSON object with playlist title, playlist cover image, and a playlist.
 
-    A playlist is a list of songs and the playlist contains `NUM_SONGS_IN_DAYLIST` songs sampled from the database.
+    A playlist is a list of songs with `NUM_SONGS_IN_DAYLIST` songs sampled from the database.
     Each song is stored as a dictionary, which contains the following keys:
     song title, artist name, album, album cover image URL, and duration (rounded to the nearest second).
 
@@ -117,33 +118,26 @@ def daylist():
         "playlist": [],
     }
 
-    database = db.get_db()
-    # BEGIN SOLUTION PROMPT="query = _______"
-    query = "SELECT * FROM songs"
+    # BEGIN SOLUTION PROMPT="database = _______"
+    database = DatabaseAccessObject()
     # END SOLUTION
-    rows = database.execute(query).fetchall()
+    # BEGIN SOLUTION PROMPT="all_songs = _______"
+    all_songs = database.get_all_songs()
+    # END SOLUTION
 
     # BEGIN SOLUTION PROMPT="seed = _______"
     seed = request.args.get("seed", default=DEFAULT_SEED)
     # END SOLUTION
     random.seed(seed)
+
     # BEGIN SOLUTION PROMPT="chosen_songs = _______"
-    chosen_songs = random.sample(rows, NUM_SONGS_IN_DAYLIST)
+    chosen_songs = random.sample(all_songs, NUM_SONGS_IN_DAYLIST)
     # END SOLUTION
 
-    # BEGIN SOLUTION PROMPT="for song in _______:"
-    for song in chosen_songs:
-        # END SOLUTION
-        # BEGIN SOLUTION PROMPT="_______ # feel free to use more than one line"
-        result["playlist"].append(
-            {
-                "title": song["track_name"],
-                "artist": song["artist_name"],
-                "album": song["album_name"],
-                "album_cover": song["album_image_url"],
-                "duration": round(song["duration"]),
-            }
-        )
-        # END SOLUTION
+    # BEGIN SOLUTION PROMPT="result = _______"
+    result["playlist"] = chosen_songs
+    # END SOLUTION
 
+    # BEGIN SOLUTION PROMPT="return = _______"
     return jsonify(result), HTTPStatus.OK
+    # END SOLUTION

@@ -56,7 +56,7 @@ def load_songs_to_db():
                     row["song_link"],
                     row["song_id"],
                     row["track_name"],
-                    row["artist_name"],
+                    row['artist_name'],
                     row["album_name"],
                     row["album_image_url"],
                     row["duration"],
