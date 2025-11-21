@@ -1,13 +1,31 @@
-from . import db
+import sqlite3
+
+
 class Song:
-    # BEGIN SOLUTION PROMPT="def __init__(self, track_name, artist_name, album_name, album_image_url, duration):"
-    def __init__(self, track_name, artist_name, album_name, album_image_url, duration):
+    def __init__(
+        self,
+        track_name: str,
+        artist_name: str,
+        album_name: str,
+        album_image_url: str,
+        duration: int,
+    ):
+        # BEGIN SOLUTION PROMPT="pass"
         self.track_name = track_name
         self.artist_name = artist_name
         self.album_name = album_name
         self.album_image_url = album_image_url
         self.duration = duration
+        # END SOLUTION
 
+    def __eq__(self, other: object):
+        # BEGIN SOLUTION PROMPT="pass"
+        if type(other) is Song:
+            return self.to_dict() == other.to_dict()
+        return False
+        # END SOLUTION
+
+    # BEGIN SOLUTION
     def to_dict(self):
         return {
             "title": self.track_name,
@@ -16,30 +34,47 @@ class Song:
             "album_cover": self.album_image_url,
             "duration": round(self.duration),
         }
+
     # END SOLUTION
 
-# BEGIN SOLUTION PROMPT="class DatabaseAccessObject:"
+
 class DatabaseAccessObject:
-    def __init__(self):
-        self.db = db.get_db()
+    def __init__(self, db: sqlite3.Connection):
+        # BEGIN SOLUTION PROMPT="pass"
+        self.db = db
+        # END SOLUTION
 
     def get_all_songs(self):
+        # BEGIN SOLUTION PROMPT="pass"
         all_songs = []
         query = "SELECT * FROM songs"
-
-        for row in self.db.execute(query).fetchall():
-            song = Song(row['track_name'], row['artist_name'], row['album_name'], row['album_image_url'], row['duration'])
+        rows = self.db.execute(query).fetchall()
+        for row in rows:
+            song = Song(
+                row["track_name"],
+                row["artist_name"],
+                row["album_name"],
+                row["album_image_url"],
+                row["duration"],
+            )
             all_songs.append(song.to_dict())
         return all_songs
+        # END SOLUTION
 
-    # def get_song_by_title_and_artist(self, artist_name, track_name):
-    #     query = """
-    #             SELECT *
-    #             FROM songs
-    #             WHERE artist_name = ? AND track_name = ?
-    #             """
-    #     row = self.db.execute(query, (artist_name, track_name)).fetchone()
-
-    #     if row:
-    #         return Song(row['track_name'], row['artist_name'], row['album_name'], row['album_image_url'], round(row['duration']))
-# END SOLUTION
+    def get_song_by_title_and_artist(self, track_name: str, artist_name: str):
+        # BEGIN SOLUTION PROMPT="pass"
+        query = """
+                SELECT *
+                FROM songs
+                WHERE track_name = ? AND artist_name = ?
+                """
+        row = self.db.execute(query, (track_name, artist_name)).fetchone()
+        if row:
+            return Song(
+                row["track_name"],
+                row["artist_name"],
+                row["album_name"],
+                row["album_image_url"],
+                round(row["duration"]),
+            )
+        # END SOLUTION

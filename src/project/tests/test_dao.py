@@ -1,21 +1,28 @@
-from daylist.DAO import DatabaseAccessObject, Song
-from daylist import create_app
+from daylist.dao import DatabaseAccessObject, Song
 
-def test_dao():
-    app = create_app()
-    with app.app_context():
-        dao = DatabaseAccessObject()
-        songs = dao.get_all_songs()
 
-        assert isinstance(songs, list)
-        assert isinstance(songs[0], dict)
+def test_dao(test_db):
+    dao = DatabaseAccessObject(test_db)
+    songs = dao.get_all_songs()
 
-def test_get_song_by_title_and_artist():
-    app = create_app()
-    with app.app_context():
-        dao = DatabaseAccessObject()
-        song_obj = dao.get_song_by_title_and_artist('Ravyn Lenae', 'Love Me Not')
-        correct_song = Song('Love Me Not', 'Ravyn Lenae', 'Bird\'s Eye', 'https://i.scdn.co/image/ab67616d0000b273ef985ba96e76a9574cc68a30', 156)
+    assert type(songs) is list
 
-        assert isinstance(song_obj, Song)
-        assert song_obj == correct_song
+    for i in range(len(songs)):
+        assert type(songs[i]) is dict
+
+    assert len(songs) == 100
+
+
+def test_get_song_by_title_and_artist(test_db):
+    dao = DatabaseAccessObject(test_db)
+    song_obj = dao.get_song_by_title_and_artist("Genius", "Ravyn Lenae")
+    correct_song = Song(
+        "Genius",
+        "Ravyn Lenae",
+        "Bird's Eye",
+        "https://i.scdn.co/image/ab67616d0000b273ef985ba96e76a9574cc68a30",
+        156,
+    )
+
+    assert type(song_obj) is Song
+    assert song_obj == correct_song
