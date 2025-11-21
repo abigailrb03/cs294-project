@@ -2,6 +2,7 @@
 
 - [We have Spotify at home](#we-have-spotify-at-home)
     - [Background](#background)
+    - [`songs` table schema](#songs-table-schema)
     - [Being a software engineer](#being-a-software-engineer)
     - [Task 0: Setup](#task-0-setup)
         - [Running the web app locally](#running-the-web-app-locally)
@@ -37,9 +38,13 @@ A *tech stack* is the set of technologies you use in order to implement a piece 
 
 Our frontend is in the `daylist/templates` directory and is written in HTML (Hypertext Markup Language) and CSS (Cascading Style Sheets). HTML creates the layout and content of the webpage and CSS styles the page by customizing things such as font, colors, and font size.
 
-Everything that the user *can't* see is considered *backend*; things like OOP class designs, databases, and data manipulation are things that the user doesn't see when they visit a webpage. The backend of this project is written in Python using the [Flask](https://flask.palletsprojects.com/en/stable/) framework and can be found in in `daylist`.
+Everything that the user *can't* see is considered *backend*; things like OOP class designs, databases, and data manipulation are things that the user doesn't see when they visit a webpage. The backend of this project is written in Python using the [Flask](https://flask.palletsprojects.com/en/stable/) framework and can be found in `daylist`.
 
-For this project we will ask you to utilize knowledge you've acquired through different parts of this course, such as Python functions, data structures, and control statements, as well as SQL. We have a database of 100 songs stored in a *SQL table*. The code we use to construct the database is in `daylist/db.py`. You don't need to worry about this code, but you should read through `daylist/schema.sql` to familiarize yourself with the structure of the SQL table called `songs` we'll be using. Here are the columns in our SQL table:
+For this project we will ask you to utilize knowledge you've acquired through different parts of this course, such as Python functions, data structures, and control statements, as well as SQL.
+
+## `songs` table schema
+
+We have a database of 100 songs stored in a *SQL table*. The code we use to construct the database is in `daylist/db.py`. You don't need to worry about this code, but you should read through `daylist/schema.sql` to familiarize yourself with the structure of the SQL table called `songs` we'll be using. Here are the columns in our SQL table:
 
 | Column             | Data Type   | Description                                           |
 | ------------------ | ----------- | ----------------------------------------------------- |
@@ -99,7 +104,7 @@ Verify that:
 > Professional software projects often use a *virtual environment* in order to manage
 > the different programming language and dependency versions required for the software
 > to work. In our case, we use `uv` in order to ensure that we are using the correct
-> version of Python (the one specified in in the `.python-version` file) and the
+> version of Python (the one specified in the `.python-version` file) and the
 > correct versions of our project dependencies (specified in `pyproject.toml`).
 
 > [!TIP]
@@ -127,6 +132,11 @@ You can keep this local web server running as you work on the project. Whenever 
 
 > [!IMPORTANT]
 > You must include the `--debug` command line flag so that any changes you make to the code will appear when you refresh as the server runs. If you do not include that flag, if you make a change in your code it will not be reflected until you quit the server and restart it.
+
+> [!NOTE]
+> **What is 127.0.0.1:5000 exactly?** `127.0.0.1` is the IP address of `localhost`, which is your own computer.
+> The `:5000` indicates that the app is running on port 5000.
+> To learn more, take [CS 168: Computer Networking](https://cs168.io)!
 
 ## Data Access Object
 
@@ -325,17 +335,17 @@ A robust web API should also handle errors! Your implementation should explicitl
 }
 ```
 
+> [!TIP]
+> In order to check if a user has provided the 2 required query parameters, it will help to set a default dummy value for the `artist_name` and `song_title` variables. There is a way to do this using Flask's [`request.args.get`](https://flask.palletsprojects.com/en/stable/quickstart/#accessing-request-data) method.
+
 2. If the user provides an `artist` and `title` but the database query returns no rows, respond with status `404 NOT FOUND` and this JSON (replacing `{artist}` and `{title}` with their actual values):
 
 ```json
 {
     "status": "error",
-    "message": "Track image for artist {artist} and song title {title} not found",
+    "message": "Track image for artist {artist_name} and song title {song_title} not found",
 }
 ```
-
-> [!TIP]
-> In order to check if a user has provided the 2 required query parameters, it will help to set a default dummy value for the `artist_name` and `song_title` variables. There is a way to do this using Flask's `request.args.get` method.
 
 ### Resources
 
@@ -355,6 +365,8 @@ To manually test your implementation:
 3. You should see some plaintext JSON like so:
 
 ![GET track image API example](track-image-example.png)
+
+4. If you wish to check how your code handles errors, you can view the HTTP status codes in the logs of your Flask app in your terminal (rather than your browser).
 
 To formally test your implementation, run the following command from the root directory:
 
