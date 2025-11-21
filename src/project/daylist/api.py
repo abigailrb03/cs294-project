@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify, request
 from http import HTTPStatus
 import random
-from .DAO import DatabaseAccessObject
+from .dao import DataAccessObject
 
 from . import db
 
@@ -105,7 +105,7 @@ def daylist():
         Example song below with fake data:
 
         {
-            "title": "Love Me Not",
+            "title": "Genius",
             "artist": "Ravyn Lenae",
             "album": "Bird's Eye",
             "album_cover": "https://i.scdn.co/image/ab67616d0000b273ef985ba96e76a9574cc68a30",
@@ -118,11 +118,11 @@ def daylist():
         "playlist": [],
     }
 
-    # BEGIN SOLUTION PROMPT="database = _______"
-    database = DatabaseAccessObject()
+    # BEGIN SOLUTION PROMPT="dao = _______"
+    dao = DataAccessObject(db.get_db())
     # END SOLUTION
     # BEGIN SOLUTION PROMPT="all_songs = _______"
-    all_songs = database.get_all_songs()
+    all_songs = dao.get_all_songs()
     # END SOLUTION
 
     # BEGIN SOLUTION PROMPT="seed = _______"
@@ -134,7 +134,7 @@ def daylist():
     chosen_songs = random.sample(all_songs, NUM_SONGS_IN_DAYLIST)
     # END SOLUTION
 
-    # BEGIN SOLUTION PROMPT="result = _______"
+    # BEGIN SOLUTION PROMPT="result['playlist'] = _______"
     result["playlist"] = chosen_songs
     # END SOLUTION
 
