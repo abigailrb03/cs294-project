@@ -1,8 +1,10 @@
 from flask import Blueprint, jsonify, request
 from http import HTTPStatus
 import random
-from .dao import DataAccessObject
+from ollama import chat
+from ollama import ChatResponse
 
+from .dao import DataAccessObject
 from . import db
 
 # Create the api Blueprint
@@ -109,8 +111,21 @@ def daylist():
             "duration": 156,
         }
     """
+    response: ChatResponse = chat(
+        # model="gemma3:270m", # uv run ollama pull gemma3:270m (291 MB)
+        model="llama3.2:1b",
+        messages=[
+            {
+                "role": "user",
+                "content": 'create the name of a music playlist with the format "adjective progressive-verb day-of-week time-of-day"  for example, "epic writing friday morning"  ONLY RESPOND WITH THE PLAYLIST TITLE. Do not include anything else',
+            },
+        ],
+    )
+    title = response.message.content
+
     result = {
-        "title": "manic pixie dream girl monday",
+        # "title": "manic pixie dream girl monday",
+        "title": title,
         "image": "https://img.freepik.com/premium-photo/blue-neon-color-gradient-horizontal-background_653449-8801.jpg",
         "playlist": [],
     }
