@@ -1,6 +1,6 @@
 from . import db
-# BEGIN SOLUTION PROMPT="class DatabaseAccessObject: pass"
 class Song:
+    # BEGIN SOLUTION PROMPT="def __init__(self, track_name, artist_name, album_name, album_image_url, duration):"
     def __init__(self, track_name, artist_name, album_name, album_image_url, duration):
         self.track_name = track_name
         self.artist_name = artist_name
@@ -16,8 +16,9 @@ class Song:
             "album_cover": self.album_image_url,
             "duration": round(self.duration),
         }
+    # END SOLUTION
 
-
+# BEGIN SOLUTION PROMPT="class DatabaseAccessObject:"
 class DatabaseAccessObject:
     def __init__(self):
         self.db = db.get_db()
@@ -31,14 +32,14 @@ class DatabaseAccessObject:
             all_songs.append(song.to_dict())
         return all_songs
 
-    def get_song_by_title_and_artist(self, track_name, artist_name):
-        query = """
-                SELECT *
-                FROM songs
-                WHERE artist_name = ? AND track_name = ?
-                """
-        row = self.db.execute(query, (artist_name, track_name)).fetchone()
+    # def get_song_by_title_and_artist(self, artist_name, track_name):
+    #     query = """
+    #             SELECT *
+    #             FROM songs
+    #             WHERE artist_name = ? AND track_name = ?
+    #             """
+    #     row = self.db.execute(query, (artist_name, track_name)).fetchone()
 
-        if row is not None:
-            return Song(row['track_name'], row['artist_name'], row['album_name'], row['album_image_url'], round(row['duration']))
+    #     if row:
+    #         return Song(row['track_name'], row['artist_name'], row['album_name'], row['album_image_url'], round(row['duration']))
 # END SOLUTION
